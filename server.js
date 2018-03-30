@@ -5,10 +5,6 @@ var serveStatic = require('serve-static');
 var Gun = require('gun')
 
 
-// gun.get('users').put({
-//     name: "Price",
-//     email: "price.comstock@gmail.com"
-// })
 
 app = express();
 app.use(serveStatic(__dirname));
@@ -37,4 +33,9 @@ var server = app.listen(port);
 var gun = Gun({web: server})
 
 console.log('server started ' + port);
-gun.get('users').on( (data, key) => console.log("update:", data))
+
+// gun.get('users').put({
+//     name2: "Pc",
+//     email2: "pccdkjfsd@kjfsd.co"
+// })
+gun.get('votes/TESTVOTES').on( (data, key) => console.log("update:", data))
