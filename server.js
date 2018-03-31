@@ -2,13 +2,11 @@ var express = require('express');
 var api = require('./router.js').router;
 var serveStatic = require('serve-static');
 
-var Gun = require('gun')
-
-
+// var Gun = require('gun')
 
 app = express();
 app.use(serveStatic(__dirname));
-app.use('/gun', Gun.serve);
+// app.use('/gun', Gun.serve);
 
 // This is for development mostly
 app.use(function(req, res, next) {
@@ -30,7 +28,7 @@ app.get('/*', function (req, res) {
 var port = process.env.PORT || 5000;
 var server = app.listen(port);
 
-var gun = Gun({web: server})
+// var gun = Gun({web: server})
 
 console.log('server started ' + port);
 
@@ -38,4 +36,4 @@ console.log('server started ' + port);
 //     name2: "Pc",
 //     email2: "pccdkjfsd@kjfsd.co"
 // })
-gun.get('LYBy').on( (data, key) => console.log("update:", data))
+// gun.get('LYBy').on( (data, key) => console.log("update:", data))
