@@ -38,4 +38,4 @@ console.log('server started ' + port);
 //     name2: "Pc",
 //     email2: "pccdkjfsd@kjfsd.co"
 // })
-gun.get('votes/TESTVOTES').on( (data, key) => console.log("update:", data))
+gun.get('LYBy').on( (data, key) => console.log("update:", data))

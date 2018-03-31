@@ -2,8 +2,8 @@
   <div>
     <p>{{testData}}</p>
     <p>{{testId}}</p>
-    <button class="button" @click="addYesVote">Yes</button>
-    <button class="button" @click="addNoVote">No</button>
+    <button class="button" @click="addVote(true)">Yes</button>
+    <button class="button" @click="addVote(false)">No</button>
   </div>
 </template>
 
@@ -23,15 +23,21 @@ export default {
         const buf = crypto.randomBytes(NUM_BYTES); 
         return buf.toString('base64').replace(/\//g, '_').replace(/\+/g, '-')
       },
-      addYesVote() {
-          this.$gun.get('votes/TESTVOTES').set({id:this.testId, vote: true})
-      },
-      addNoVote() {
-          this.$gun.get('votes/TESTVOTES').set({id:this.testId, vote: false})
+      addVote(isYesVote) {
+          // idk if this is very javascripty
+          // python yolo
+          let voteObject = {}
+          voteObject[this.generateRandomId()] = isYesVote
+          this.$gun.get('LYBy').put(voteObject)
       }
   },
   created () {
-      this.$gun.get('votes/TESTVOTES').on( (data, key) => this.testData=data)
+    //   this.$gun.get(this.testId).on( (data, key) => {
+      this.$gun.get('LYBy').on( (data, key) => {
+          console.log(data)
+          console.log(key)
+          this.testData=data
+        })
   }
 }
 </script>
