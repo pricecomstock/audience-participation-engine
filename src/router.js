@@ -1,9 +1,10 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Home from "./views/Home.vue";
+import Home from "./views/Create.vue";
 
 Vue.use(Router);
 
+// TODO: Set up create and join pages
 export default new Router({
   mode: "history",
   base: process.env.BASE_URL,
@@ -19,13 +20,13 @@ export default new Router({
       component: Home
     },
     {
-      path: "/about",
-      name: "about",
+      path: "/join",
+      name: "join",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () =>
-        import(/* webpackChunkName: "about" */ "./views/About.vue")
+        import(/* webpackChunkName: "about" */ "./views/Join.vue")
     }
   ]
 });

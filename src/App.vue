@@ -3,8 +3,9 @@
     <pcnav></pcnav>
     <div class="section">
       <div class="container">
-        <div class="button" @click="vote('yes')">hell yeah!</div>
-        <div class="button" @click="vote('no')">no way!</div>
+        <div v-for="(choice, index) in choices" class="button" @click="vote(index)" :key="index">{{ choice }}</div>
+        <!-- <div class="button" @click="vote('yes')">hell yeah!</div>
+        <div class="button" @click="vote('no')">no way!</div> -->
         {{resultString}}
       </div>
     </div>
@@ -13,6 +14,7 @@
 </template>
 
 <script>
+// TODO Move most of this functionality into Views and Components
 import Nav from "@/components/nav/Nav.vue";
 import Footer from "@/components/nav/Footer.vue";
 
@@ -21,24 +23,29 @@ export default {
   data() {
     return {
       msg: "Welcome to Your Vue.js App",
-      votes: []
+      votes: [],
+      choices: []
     };
   },
   sockets: {
     connect: function() {
       console.log("socket connected");
     },
-    results: function(votes) {
+    results: function(newVotes) {
       console.log(
-        'this method was fired by the socket server. eg: io.emit("customEmit", data)'
+        'received results from server', newVotes
       );
-      this.votes = votes;
+      this.votes = newVotes.map( voteIndex => this.choices[voteIndex]);
+    },
+    startVote: function(newChoices) {
+      console.log('starting vote with choices', newChoices);
+      this.choices = newChoices;
     }
   },
   methods: {
-    vote(value) {
-      console.log("voted", value);
-      this.$socket.emit("vote", value);
+    vote(choiceIndex) {
+      console.log("voted", choiceIndex);
+      this.$socket.emit("vote", choiceIndex);
     }
   },
   computed: {
