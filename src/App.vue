@@ -2,7 +2,11 @@
   <div id="app">
     <pcnav></pcnav>
     <div class="section">
-      <router-view/>
+      <div class="container">
+        <div class="button" @click="vote('yes')">hell yeah!</div>
+        <div class="button" @click="vote('no')">no way!</div>
+        {{resultString}}
+      </div>
     </div>
     <pcfoot></pcfoot>
   </div>
@@ -13,7 +17,46 @@ import Nav from "@/components/nav/Nav.vue";
 import Footer from "@/components/nav/Footer.vue";
 
 export default {
-  name: "home",
+  name: "app",
+  data() {
+    return {
+      msg: "Welcome to Your Vue.js App",
+      votes: []
+    };
+  },
+  sockets: {
+    connect: function() {
+      console.log("socket connected");
+    },
+    results: function(votes) {
+      console.log(
+        'this method was fired by the socket server. eg: io.emit("customEmit", data)'
+      );
+      this.votes = votes;
+    }
+  },
+  methods: {
+    vote(value) {
+      console.log("voted", value);
+      this.$socket.emit("vote", value);
+    }
+  },
+  computed: {
+    resultString() {
+      const yesSymbol = "✅";
+      const noSymbol = "❌";
+      let results = "";
+
+      for (let v in this.votes.filter(vote => vote === "yes")) {
+        results += yesSymbol;
+      }
+      for (let v in this.votes.filter(vote => vote === "no")) {
+        results += noSymbol;
+      }
+
+      return results;
+    }
+  },
   components: {
     pcnav: Nav,
     pcfoot: Footer
