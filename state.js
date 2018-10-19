@@ -1,4 +1,4 @@
-class Votes {
+class State {
   constructor(choices) {
     // this._id = idGen(ID_LENGTH);
 
@@ -37,4 +37,4 @@ class Votes {
   }
 }
 
-module.exports.Votes = Votes;
+module.exports.State = State;

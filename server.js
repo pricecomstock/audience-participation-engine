@@ -4,7 +4,7 @@ var io = require("socket.io")(http);
 var api = require("./router.js").router;
 var serveStatic = require("serve-static");
 
-var Votes = require("./votes.js").Votes;
+var State = require("./state.js").State;
 
 // FIX: figure out actual CORS rules
 // This is for development mostly
@@ -18,7 +18,7 @@ app.use(function(req, res, next) {
 });
 
 var choices = ['yes', 'no']
-var votes = new Votes(choices);
+var votes = new State(choices);
 
 // Socket.io Stuff
 io.on("connection", function(socket) {

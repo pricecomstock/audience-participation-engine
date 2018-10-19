@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <pcnav></pcnav>
+    <router-view></router-view>
     <div class="section">
       <div class="container">
         <div v-for="(choice, index) in choices" class="button" @click="vote(index)" :key="index">{{ choice }}</div>
@@ -22,47 +23,7 @@ export default {
   name: "app",
   data() {
     return {
-      msg: "Welcome to Your Vue.js App",
-      votes: [],
-      choices: []
     };
-  },
-  sockets: {
-    connect: function() {
-      console.log("socket connected");
-    },
-    results: function(newVotes) {
-      console.log(
-        'received results from server', newVotes
-      );
-      this.votes = newVotes.map( voteIndex => this.choices[voteIndex]);
-    },
-    startVote: function(newChoices) {
-      console.log('starting vote with choices', newChoices);
-      this.choices = newChoices;
-    }
-  },
-  methods: {
-    vote(choiceIndex) {
-      console.log("voted", choiceIndex);
-      this.$socket.emit("vote", choiceIndex);
-    }
-  },
-  computed: {
-    resultString() {
-      const yesSymbol = "✅";
-      const noSymbol = "❌";
-      let results = "";
-
-      for (let v in this.votes.filter(vote => vote === "yes")) {
-        results += yesSymbol;
-      }
-      for (let v in this.votes.filter(vote => vote === "no")) {
-        results += noSymbol;
-      }
-
-      return results;
-    }
   },
   components: {
     pcnav: Nav,
