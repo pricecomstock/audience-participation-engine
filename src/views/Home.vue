@@ -14,7 +14,7 @@
             </a>
           </div>
         </div>
-        <a href="" class="button is-white">CREATE</a>
+        <router-link to="create" class="button is-white" tag="a">CREATE</router-link>
       </div>
     </div>
     <br>
@@ -29,6 +29,7 @@ export default {
   name: "home",
   mounted() {
     // axios.get("http://google.com");
+    console.log(process.env.BASE_URL)
   }
 };
 </script>

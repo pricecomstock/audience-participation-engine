@@ -9,7 +9,7 @@
 import axios from "axios";
 
 export default {
-  name: "home",
+  name: "join",
   mounted() {
     axios.get("http://google.com");
   }

@@ -1,11 +1,50 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-    <a href="#" class="button">None</a>
-    <a href="#" class="button is-primary">Primary</a>
-    <a href="#" class="button is-link">Link</a>
-    <a href="#" class="button is-warning">Warning</a>
-    <a href="#" class="button is-danger">Danger</a>
-    <a href="#" class="button is-success">Success</a>
+  <div class="columns is-centered">
+    <div class="column is-one-third">
+      <div class="field">
+        <label class="label is-large">ROOM NAME</label>
+        <div class="control">
+          <input class="input is-large" v-model="roomName">          
+        </div>
+      </div>
+
+      <div class="field is-grouped is-grouped-centered">
+        <p class="control">
+          <a class="button is-large is-primary" @click="createRoom()">
+            CREATE
+          </a>
+        </p>
+        <p class="control">
+          <a class="button is-large is-white">
+            Cancel
+          </a>
+        </p>
+      </div>
+    </div>
   </div>
 </template>
+
+
+<script>
+// @ is an alias to /src
+import axios from "@/axios-backend";
+
+export default {
+  name: "create",
+  data() {
+    return {
+      roomName: ""
+    }
+  },
+  methods: {
+    createRoom() {
+      axios.post('/createRoom', {
+        name: this.roomName
+      })
+    }
+  },
+  mounted() {
+    // axios.get("http://google.com");
+  }
+};
+</script>

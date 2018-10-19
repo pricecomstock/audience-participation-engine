@@ -1,5 +1,10 @@
 <template>
-    
+  <div class="container">
+    <div v-for="(choice, index) in choices" class="button" @click="vote(index)" :key="index">{{ choice }}</div>
+    <!-- <div class="button" @click="vote('yes')">hell yeah!</div>
+    <div class="button" @click="vote('no')">no way!</div> -->
+    {{resultString}}
+  </div>
 </template>
 
 <script>

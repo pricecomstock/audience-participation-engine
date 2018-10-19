@@ -6,7 +6,7 @@ import Create from "./views/Create.vue";
 
 Vue.use(Router);
 
-// TODO: Set up create and join pages
+// TODO: Set up watch and vote pages
 export default new Router({
   mode: "history",
   base: process.env.BASE_URL,

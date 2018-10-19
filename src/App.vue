@@ -1,21 +1,14 @@
 <template>
   <div id="app">
     <pcnav></pcnav>
-    <router-view></router-view>
     <div class="section">
-      <div class="container">
-        <div v-for="(choice, index) in choices" class="button" @click="vote(index)" :key="index">{{ choice }}</div>
-        <!-- <div class="button" @click="vote('yes')">hell yeah!</div>
-        <div class="button" @click="vote('no')">no way!</div> -->
-        {{resultString}}
-      </div>
+      <router-view></router-view>
     </div>
     <pcfoot></pcfoot>
   </div>
 </template>
 
 <script>
-// TODO Move most of this functionality into Views and Components
 import Nav from "@/components/nav/Nav.vue";
 import Footer from "@/components/nav/Footer.vue";
 
