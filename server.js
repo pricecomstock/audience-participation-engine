@@ -4,7 +4,6 @@ var io = require("socket.io")(http);
 var createRouter = require("./router.js").createRouter;
 var serveStatic = require("serve-static");
 
-var State = require("./state.js").State;
 
 // FIX: figure out actual CORS rules
 // This is for development mostly
@@ -17,28 +16,6 @@ app.use(function(req, res, next) {
   next();
 });
 
-var choices = ['yes', 'no']
-var votes = new State(choices);
-
-// Socket.io Stuff
-io.on("connection", function(socket) {
-  // TODO: Use Namespaces to create different rooms
-  // https://socket.io/docs/rooms-and-namespaces/
-  console.log("a user connected");
-  io.emit("startVote", votes.choices)
-  io.emit("results", votes.summary());
-  
-
-  socket.on("vote", choiceIndex => {
-    console.log("vote", choiceIndex);
-
-    // TODO: Base player stuff of of actual /join info
-    let player = "xyz"
-    votes.addPlayerVote(player, choiceIndex);
-
-    io.emit("results", votes.summary());
-  });
-});
 
 api = createRouter(io)
 

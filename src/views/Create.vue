@@ -41,6 +41,9 @@ export default {
       axios.post('/createroom', {
         name: this.roomName
       })
+      .then( (response) => {
+        this.$router.push(`/watch/${response.data.code}`)
+      })
     }
   },
   mounted() {

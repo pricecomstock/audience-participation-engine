@@ -8,10 +8,16 @@
 <script>
 export default {
   name: "vote",
+  props: {
+    id: {
+      required: true
+    }
+  },
   data() {
     return {
       votes: [],
-      choices: []
+      choices: [],
+      playerName: 'xyz' // TODO Make not static
     };
   },
   sockets: {
@@ -33,9 +39,20 @@ export default {
   },
   methods: {
     vote(choiceIndex) {
-      console.log("voted", choiceIndex);
-      this.$socket.emit("vote", choiceIndex);
+      let voteInfo = {
+        choiceIndex: choiceIndex,
+        playerName: this.playerName,
+        room: this.id
+      }
+      console.table(voteInfo);
+      this.$socket.emit("vote", voteInfo);
+    },
+    joinRoom(room) {
+      this.$socket.emit("room", room)
     }
+  },
+  mounted() {
+    this.joinRoom(this.id)
   },
   computed: {
     resultString() {

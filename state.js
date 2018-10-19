@@ -32,8 +32,8 @@ class State {
     return Object.values(votes)
   }
 
-  addPlayerVote(player, choiceIndex) {
-    this._playerChoices[player] = choiceIndex
+  addPlayerVote(voteInfo) {
+    this._playerChoices[voteInfo.playerName] = voteInfo.choiceIndex
   }
 }
 

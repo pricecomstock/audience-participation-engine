@@ -29,14 +29,16 @@ export default new Router({
       component: Join
     },
     {
-      path: "/vote",
+      path: "/vote/:id",
       name: "vote",
-      component: Vote
+      component: Vote,
+      props: true
     },
     {
-      path: "/watch",
+      path: "/watch/:id",
       name: "watch",
-      component: Watch
+      component: Watch,
+      props: true
     },
     // {
     //   path: "/join",
