@@ -3,6 +3,8 @@ import Router from "vue-router";
 import Join from "./views/Join.vue";
 import Home from "./views/Home.vue";
 import Create from "./views/Create.vue";
+import Vote from "./views/Vote.vue";
+import Watch from "./views/Watch.vue";
 
 Vue.use(Router);
 
@@ -25,6 +27,16 @@ export default new Router({
       path: "/join",
       name: "join",
       component: Join
+    },
+    {
+      path: "/vote",
+      name: "vote",
+      component: Vote
+    },
+    {
+      path: "/watch",
+      name: "watch",
+      component: Watch
     },
     // {
     //   path: "/join",

@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     createRoom() {
-      axios.post('/createRoom', {
+      axios.post('/createroom', {
         name: this.roomName
       })
     }

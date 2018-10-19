@@ -1,8 +1,6 @@
 <template>
   <div class="container">
     <div v-for="(choice, index) in choices" class="button" @click="vote(index)" :key="index">{{ choice }}</div>
-    <!-- <div class="button" @click="vote('yes')">hell yeah!</div>
-    <div class="button" @click="vote('no')">no way!</div> -->
     {{resultString}}
   </div>
 </template>
@@ -24,6 +22,8 @@ export default {
       console.log(
         'received results from server', newVotes
       );
+      // the votes come in the form of indices
+      // have to remap them to actual choices
       this.votes = newVotes.map( voteIndex => this.choices[voteIndex]);
     },
     startVote: function(newChoices) {
@@ -52,10 +52,6 @@ export default {
 
       return results;
     }
-  },
-  components: {
-    pcnav: Nav,
-    pcfoot: Footer
   }
 };
 </script>

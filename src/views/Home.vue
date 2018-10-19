@@ -9,9 +9,9 @@
             <input class="input is-large is-uppercase" type="text" placeholder="Code">
           </div>
           <div class="control">
-            <a class="button is-primary is-large">
+            <router-link to="/vote" tag="a" class="button is-primary is-large">
               JOIN
-            </a>
+            </router-link>
           </div>
         </div>
         <router-link to="create" class="button is-white" tag="a">CREATE</router-link>

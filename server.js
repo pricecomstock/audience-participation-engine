@@ -1,7 +1,7 @@
 var app = require("express")();
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
-var api = require("./router.js").router;
+var createRouter = require("./router.js").createRouter;
 var serveStatic = require("serve-static");
 
 var State = require("./state.js").State;
@@ -39,6 +39,8 @@ io.on("connection", function(socket) {
     io.emit("results", votes.summary());
   });
 });
+
+api = createRouter(io)
 
 app.use("/api", api);
 
