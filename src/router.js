@@ -39,7 +39,7 @@ export default new Router({
       name: "watch",
       component: Watch,
       props: true
-    },
+    }
     // {
     //   path: "/join",
     //   name: "join",

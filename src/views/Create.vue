@@ -34,16 +34,17 @@ export default {
   data() {
     return {
       roomName: ""
-    }
+    };
   },
   methods: {
     createRoom() {
-      axios.post('/createroom', {
-        name: this.roomName
-      })
-      .then( (response) => {
-        this.$router.push(`/watch/${response.data.code}`)
-      })
+      axios
+        .post("/createroom", {
+          name: this.roomName
+        })
+        .then(response => {
+          this.$router.push(`/watch/${response.data.code}`);
+        });
     }
   },
   mounted() {

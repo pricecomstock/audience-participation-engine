@@ -12,6 +12,7 @@ class Room {
     this._roomio = io.on("connection", socket => {
       // io is the server
       // socket is the client connection
+      let roomEmit = io.to(this.code).emit;
 
       // Startup tasks
       console.log(code, "a user connected");
@@ -19,11 +20,11 @@ class Room {
       // When client joins a room
       socket.on("room", room => {
         // client will use this to join a room
-        // TODO validate room exists
+        // TODO validate room exists somewhere else eventually to prevent malicious attacks
         socket.join(room);
         // TODO this should pass the whole room state instead
-        io.emit("startVote", votes.choices);
-        io.emit("results", this.summary());
+        roomEmit("startVote", this.choices);
+        roomEmit("results", this.summary());
       });
 
       socket.on("vote", voteInfo => {
@@ -31,8 +32,13 @@ class Room {
 
         this.addPlayerVote(voteInfo);
 
-        io.emit("results", this.summary());
+        roomEmit("results", this.summary());
       });
+
+      socket.on("watchtovote", data => {
+        console.log("passing to clients:", data)
+        io.emit("broadcast", data)
+      })
     });
 
     // TODO: Create options state

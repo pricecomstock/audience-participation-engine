@@ -1,3 +1,5 @@
+// DELETETHIS: Whole file probably
+
 class State {
   constructor(choices) {
     // this._id = idGen(ID_LENGTH);

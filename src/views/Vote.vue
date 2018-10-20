@@ -17,7 +17,7 @@ export default {
     return {
       votes: [],
       choices: [],
-      playerName: 'xyz' // TODO Make not static
+      playerName: "xyz" // TODO Make not static
     };
   },
   sockets: {
@@ -25,16 +25,17 @@ export default {
       console.log("socket connected");
     },
     results: function(newVotes) {
-      console.log(
-        'received results from server', newVotes
-      );
+      console.log("received results from server", newVotes);
       // the votes come in the form of indices
       // have to remap them to actual choices
-      this.votes = newVotes.map( voteIndex => this.choices[voteIndex]);
+      this.votes = newVotes.map(voteIndex => this.choices[voteIndex]);
     },
     startVote: function(newChoices) {
-      console.log('starting vote with choices', newChoices);
+      console.log("starting vote with choices", newChoices);
       this.choices = newChoices;
+    },
+    broadcast: function(data) {
+      console.log("broadcast:", data)
     }
   },
   methods: {
@@ -43,16 +44,16 @@ export default {
         choiceIndex: choiceIndex,
         playerName: this.playerName,
         room: this.id
-      }
+      };
       console.table(voteInfo);
       this.$socket.emit("vote", voteInfo);
     },
     joinRoom(room) {
-      this.$socket.emit("room", room)
+      this.$socket.emit("room", room);
     }
   },
   mounted() {
-    this.joinRoom(this.id)
+    this.joinRoom(this.id);
   },
   computed: {
     resultString() {
@@ -75,5 +76,4 @@ export default {
 </script>
 
 <style>
-
 </style>

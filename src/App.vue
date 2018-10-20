@@ -15,8 +15,7 @@ import Footer from "@/components/nav/Footer.vue";
 export default {
   name: "app",
   data() {
-    return {
-    };
+    return {};
   },
   components: {
     pcnav: Nav,

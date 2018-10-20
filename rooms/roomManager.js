@@ -38,15 +38,21 @@ class RoomManager {
     // Keep generating codes until one is not taken
     do {
       potentialCode = generateCode();
-    } while (
+    } while (this.checkRoomExists(potentialCode));
+
+    return potentialCode;
+  }
+
+  checkRoomExists(code) {
+    return (
       this._rooms
+        // Create array of room codes
         .map(room => {
           return room.code;
         })
-        .includes(potentialCode)
+        // true if this array has our code in it
+        .includes(code)
     );
-
-    return potentialCode;
   }
 }
 

@@ -4,7 +4,6 @@ var io = require("socket.io")(http);
 var createRouter = require("./router.js").createRouter;
 var serveStatic = require("serve-static");
 
-
 // FIX: figure out actual CORS rules
 // This is for development mostly
 app.use(function(req, res, next) {
@@ -16,8 +15,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-
-api = createRouter(io)
+api = createRouter(io);
 
 app.use("/api", api);
 
