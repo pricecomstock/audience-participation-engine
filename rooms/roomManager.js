@@ -1,4 +1,6 @@
-var Room = require("./room").Room;
+var Room = require("./room");
+
+// TODO: implement namespace "garbage collection"
 
 function generateCode() {
   const codeLength = 4;
@@ -27,6 +29,7 @@ class RoomManager {
   createNewRoom(roomData) {
     let newRoom = new Room(this.randomAvailableRoomCode(), this._io, roomData);
     this._rooms.push(newRoom);
+    return newRoom.code;
   }
 
   randomAvailableRoomCode() {
@@ -40,9 +43,11 @@ class RoomManager {
         .map(room => {
           return room.code;
         })
-        .find(potentialCode)
+        .includes(potentialCode)
     );
+
+    return potentialCode;
   }
 }
 
-module.exports.RoomManager = RoomManager;
+module.exports = RoomManager;

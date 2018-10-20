@@ -1,32 +1,15 @@
 var express = require("express");
-var State = require("./state.js").State;
+var RoomManager = require('./rooms/roomManager.js')
 
 function createRouter(io) {
-  var rooms = [];
-
-  var choices = ["yes", "no"];
-  var votes = new State(choices);
-  // Socket.io Stuff
-  // io.on("connection", function(socket) {
-  //   // TODO: Use Namespaces to create different rooms
-  //   // DOCS: https://socket.io/docs/rooms-and-namespaces/
-  //   console.log("a user connected");
-  //   io.emit("startVote", votes.choices)
-  //   io.emit("results", votes.summary());
-
-  //   socket.on("vote", choiceIndex => {
-  //     console.log("vote", choiceIndex);
-
-  //     // TODO: Base player stuff of of actual /join info
-  //     let player = "xyz"
-  //     votes.addPlayerVote(player, choiceIndex);
-
-  //     io.emit("results", votes.summary());
-  //   });
-  // });
-
+  
+  // Set up router
   var router = express.Router();
   router.use(express.json());
+  
+  // Set up room management
+  var rooms = [];
+  var roomManager = new RoomManager(io)
 
   // Base route
   router.get("/", function(req, res) {
@@ -46,12 +29,10 @@ function createRouter(io) {
   //------//
 
   router.post("/createroom", function(req, res) {
-    // TODO: Maybe needs to be an array of objects with room metadata
-    rooms.push(createNewRoom("TEST"));
-    res.json({ success: true, code: "TEST" });
+    const newRoomCode = roomManager.createNewRoom({name:req.body.name});
+    console.log("Created", newRoomCode)
+    res.json({ success: true, code: newRoomCode });
   });
-
-  // TODO: implement namespace "garbage collection"
 
   return router;
 }

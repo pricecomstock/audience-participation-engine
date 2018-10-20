@@ -4,7 +4,6 @@ class State {
 
     // this._players = [];
 
-    // TODO: Create choices state
     this._choices = choices
 
     this._playerChoices = {}
