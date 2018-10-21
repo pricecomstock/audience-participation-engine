@@ -1,7 +1,7 @@
 <template>
     <div>
       <div>room code: {{ id }}</div>
-      <button class="button" @click="broadcast({msg: 'test'})">Broadcast</button>
+      <!-- <button class="button" @click="broadcast({msg: 'test'})">Broadcast</button> -->
     </div>
     <!-- TODO: This is where all the d3.js stuff will go -->
 </template>
@@ -23,20 +23,17 @@ export default {
     connect: function() {
       console.log("socket connected");
     },
-    results: function(newVotes) {
-      console.log("received results from server", newVotes);
+    state: function(newState) {
+      console.log("received results from server", newState);
       // the votes come in the form of indices
       // have to remap them to actual choices
-      this.votes = newVotes.map(voteIndex => this.choices[voteIndex]);
+      this.votes = newState.voteValues.map(voteIndex => this.choices[voteIndex]);
     }
   },
   methods: {
     joinRoom(room) {
       this.$socket.emit("room", room);
-    },
-    broadcast(data) {
-      this.$socket.emit("watchtovote", data)
-    } 
+    }
   },
   mounted() {
     this.joinRoom(this.id);

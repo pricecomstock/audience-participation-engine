@@ -37,7 +37,10 @@ function createRouter(io) {
     let code = req.body.code.toUpperCase();
     console.debug('Checking existence of:', code)
     let success = roomManager.checkRoomExists(code)
-    res.json({ success: success});
+    res.json({
+      success: success,
+      code: code
+    });
   });
 
   return router;

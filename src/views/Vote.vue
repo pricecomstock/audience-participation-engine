@@ -24,19 +24,17 @@ export default {
     connect: function() {
       console.log("socket connected");
     },
-    results: function(newVotes) {
-      console.log("received results from server", newVotes);
+    state: function(newState) {
+      console.log("received results from server", newState);
       // the votes come in the form of indices
       // have to remap them to actual choices
-      this.votes = newVotes.map(voteIndex => this.choices[voteIndex]);
-    },
-    startVote: function(newChoices) {
-      console.log("starting vote with choices", newChoices);
-      this.choices = newChoices;
-    },
-    broadcast: function(data) {
-      console.log("broadcast:", data)
+      this.votes = newState.voteValues.map(voteIndex => this.choices[voteIndex]);
+      this.choices = newState.choices;
     }
+    // startVote: function(newChoices) {
+    //   console.log("starting vote with choices", newChoices);
+    //   this.choices = newChoices;
+    // }
   },
   methods: {
     vote(choiceIndex) {
