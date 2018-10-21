@@ -33,13 +33,14 @@ class Room {
     return this._players;
   }
 
-  addPlayerVote(voteInfo) {
-    this._playerChoices[voteInfo.playerName] = voteInfo.choiceIndex
+  addPlayerVote(playerId, choiceIndex) {
+    console.log(playerId, "voted for", choiceIndex)
+    this._playerChoices[playerId] = choiceIndex
   }
 
   summary() {
     // TODO: Match this to new summary format instead of just being an array
-    console.log(this._playerChoices)
+    console.table(this._playerChoices)
     let votes = Object.values(this._playerChoices)
     console.log(votes)
     let state = {

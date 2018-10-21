@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "bulma": "^0.7.1",
+    "emoji-regex": "^7.0.1",
     "express": "^4.16.4",
     "serve-static": "^1.13.2",
     "socketio": "^1.0.0",

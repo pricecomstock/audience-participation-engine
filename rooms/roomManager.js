@@ -1,8 +1,20 @@
 var Room = require("./room");
+const crypto = require("crypto");
 
 // TODO: implement namespace "garbage collection"
 
-function generateCode() {
+function generatePlayerId(characters) {
+  // Synchronous
+  // 3 bytes = 4 base 64 characters
+  const num_bytes = Math.floor(characters * 0.75)
+  const buf = crypto.randomBytes(num_bytes);
+  return buf
+    .toString("base64")
+    .replace(/\//g, "_")
+    .replace(/\+/g, "-");
+};
+
+function generateRoomCode() {
   const codeLength = 4;
   // const validCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   // Letters removed to censor bad words
@@ -42,7 +54,9 @@ class RoomManager {
           socket.nickname = "newplayer";
           socket.emoji = "grin";
           socket.roomCode = roomCode;
+          socket.playerId = generatePlayerId(12)
           console.log(io.sockets.adapter.rooms[roomCode]);
+          socket.emit("playerIdAssigned", socket.playerId)
           sendRoomUpdates(roomCode);
         }
         // TODO Probably need to do something different on joining a room than normal updates, we'll see
@@ -51,15 +65,17 @@ class RoomManager {
       });
 
       socket.on("setplayerinfo", info => {
-        socket.nickname = info.nickname;
-        socket.emoji = info.emoji;
+        if (this.checkRoomExists(socket.roomCode)) {
+          socket.nickname = info.nickname;
+          socket.emoji = info.emoji;
+
+        }
       });
 
-      socket.on("vote", voteInfo => {
+      socket.on("vote", choiceIndex => {
         if (this.checkRoomExists(socket.roomCode)) {
-          console.table(voteInfo);
           let playerRoom = this.getRoomWithCode(socket.roomCode)
-          playerRoom.addPlayerVote(voteInfo);
+          playerRoom.addPlayerVote(socket.playerId, choiceIndex);
           sendRoomUpdates(socket.roomCode)
         }
         // TODO: Else send disconnect notice or something
@@ -83,7 +99,7 @@ class RoomManager {
 
     // Keep generating codes until one is not taken
     do {
-      potentialCode = generateCode();
+      potentialCode = generateRoomCode();
     } while (this.checkRoomExists(potentialCode));
 
     return potentialCode;
