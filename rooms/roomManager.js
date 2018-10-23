@@ -51,7 +51,7 @@ class RoomManager {
         // client will use this to join a room
         if (this.checkRoomExists(roomCode)) {
           socket.join(roomCode);
-          socket.nickname = "newplayer";
+          socket.nickname = "human";
           socket.emoji = "grin";
           socket.roomCode = roomCode;
           socket.playerId = generatePlayerId(12)
@@ -64,11 +64,11 @@ class RoomManager {
         // io.in(this.code).emit("results", this.summary());
       });
 
-      socket.on("setplayerinfo", info => {
+      socket.on("updateplayerinfo", info => {
         if (this.checkRoomExists(socket.roomCode)) {
           socket.nickname = info.nickname;
           socket.emoji = info.emoji;
-
+          console.log(socket)
         }
       });
 

@@ -12,7 +12,7 @@
         <div class="field">
           <label class="label is-large">Display Name</label>
           <div class="control">
-            <input class="input is-large" type="text" placeholder="human" v-model="name">
+            <input class="input is-large" type="text" placeholder="human" v-model="nickname">
           </div>
         </div>
         <div class="field is-grouped is-grouped-right">
@@ -39,7 +39,7 @@ import EmojiInput from '@/components/EmojiInput.vue';
 export default {
   data() {
     return {
-      name: '',
+      nickname: '',
       emoji: ''
     }
   },
@@ -48,8 +48,9 @@ export default {
       this.$emit("close");
     },
     submit() {
+      console.log("submitted")
       this.$socket.emit("updateplayerinfo", {
-        name: this.name,
+        nickname: this.nickname,
         emoji: this.emoji
       })
     }
