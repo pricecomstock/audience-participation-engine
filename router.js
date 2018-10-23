@@ -30,7 +30,7 @@ function createRouter(io) {
   router.post("/createroom", function(req, res) {
     const newRoomInfo = roomManager.createNewRoom({ name: req.body.name });
     console.log("Created", newRoomInfo.roomCode);
-    res.json({ success: true, code: newRoomCode, adminKey: newRoomInfo.adminKey });
+    res.json({ success: true, code: newRoomInfo.roomCode, adminKey: newRoomInfo.adminKey });
   });
   
   router.post("/checkroom", function(req, res) {

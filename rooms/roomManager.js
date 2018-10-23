@@ -47,7 +47,6 @@ class RoomManager {
 
       // When client joins a room
       socket.on("room", roomCode => {
-        console.log()
         // client will use this to join a room
         if (this.checkRoomExists(roomCode)) {
           socket.join(roomCode);
@@ -69,9 +68,28 @@ class RoomManager {
           this.getRoomWithCode(roomCode).addPlayer(socket.player);
           sendRoomUpdates(roomCode);
         }
-        // TODO Probably need to do something different on joining a room than normal updates, we'll see
-        // io.in(this.code).emit("startVote", this.choices);
-        // io.in(this.code).emit("results", this.summary());
+      });
+
+      socket.on("roomadminjoin", data => {
+        let roomCode = data.roomCode
+        // TODO Also check admin key
+        if (this.checkRoomExists(roomCode)) {
+          socket.join(roomCode);
+          socket.roomCode = roomCode;
+          socket.isRoomAdmin = true;
+
+          sendRoomUpdates(roomCode);
+        }
+      });
+      
+      socket.on("newchoices", newChoicesList => {
+        // TODO Also check admin key
+        if (this.checkRoomExists(socket.roomCode)) {
+          let room = this.getRoomWithCode(socket.roomCode)
+          room.newVote(newChoicesList)
+
+          sendRoomUpdates(socket.roomCode);
+        }
       });
 
       socket.on("updateplayerinfo", info => {
@@ -98,10 +116,10 @@ class RoomManager {
   }
 
   createNewRoom(roomData) {
-    let newRoom = new Room(this.randomAvailableRoomCode(), roomData);
+    const adminKey = generatePlayerId(30);
+    let newRoom = new Room(this.randomAvailableRoomCode(), adminKey, roomData);
     this._rooms.push(newRoom);
     console.log(this._rooms)
-    const adminKey = generatePlayerId(30);
     return {
       roomCode: newRoom.code,
       adminKey: adminKey

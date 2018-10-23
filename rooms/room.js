@@ -1,10 +1,13 @@
 class Room {
-  constructor(code, data) {
+  constructor(code, adminKey, data) {
     //TODO: Add game options
     this._code = code;
+
+    // TODO: Maybe hash this but it definitely does not matter for first demo
+    this._adminKey = adminKey;
     
     // Room state
-    this._choices = ['yee', 'nah']
+    this._choices = ['Yes', 'No']
     this._players = [];
   }
   
@@ -45,6 +48,17 @@ class Room {
       players: this.players
     }
     return state
+  }
+
+  newVote(newChoicesList) {
+    this._choices = newChoicesList;
+    this.resetVotes()
+  }
+
+  resetVotes() {
+    this._players.forEach( player => {
+      player.choiceIndex = -1;
+    })
   }
 }
 

@@ -14,6 +14,7 @@
           <div class="control">
             <input @keydown.enter="submit()" class="input is-large" type="text" placeholder="human" v-model="nickname">
           </div>
+          <!-- FIXME There is a bug with pressing enter on nickname on mobile, though emoji works-->
         </div>
         <div class="field is-grouped is-grouped-right">
           <p class="control">

@@ -1,10 +1,10 @@
 <template>
     <div>
-      <div>room code: {{ id }}</div>
       <div class="columns is-centered">
-        <div class="column">
+        <div class="column is-half">
+          <span class="tag is-warning is-large">{{ id }}</span>
           <div class="box">
-            <table class="table">
+            <table class="table is-fullwidth is-striped">
               <thead>
                 <th>emoji</th>
                 <th>id</th>
@@ -22,6 +22,19 @@
                 </tr>
               </tbody>
             </table>
+          </div>
+          <div class="box">
+            <div class="field">
+              <label class="label">New Choices</label>
+              <div class="control">
+                <textarea class="textarea" placeholder="enter one choice per line" v-model="newChoices"></textarea>
+              </div>
+            </div>
+            <div class="field is-grouped is-grouped-right">
+              <div class="control">
+                <button class="button is-primary" @click="submitNewChoices(newChoicesList)">Submit</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -42,7 +55,8 @@ export default {
     return {
       players: [],
       voteValues: [],
-      choices: []
+      choices: [],
+      newChoices: ''
     };
   },
   sockets: {
@@ -66,8 +80,20 @@ export default {
     }
   },
   methods: {
-    joinRoomAsAdmin(room) {
-      this.$socket.emit("room", room);
+    joinRoomAsAdmin(roomCode) {
+      this.$socket.emit("roomadminjoin", {
+        roomCode: roomCode
+        //TODO Add admin key
+      });
+    },
+    submitNewChoices() {
+      //TODO Add admin key
+      this.$socket.emit("newchoices", this.newChoicesList)
+    }
+  },
+  computed: {
+    newChoicesList() {
+      return this.newChoices.split('\n').map( choice => {return choice.trim()});
     }
   },
   mounted() {
