@@ -5,7 +5,6 @@
     </div>
 
     <div v-for="(choice, index) in choices" class="button is-large" @click="vote(index)" :key="index">{{ choice }}</div>
-    {{resultString}}
 
     <div>
       <button class="button" @click="showEditPlayerInfo = !showEditPlayerInfo">Change player settings</button>
@@ -47,8 +46,16 @@ export default {
       console.log("received results from server", newState);
       // the votes come in the form of indices
       // have to remap them to actual choices
-      this.votes = newState.voteValues.map(voteIndex => this.choices[voteIndex]);
       this.choices = newState.choices;
+      this.players = newState.players.map( (player) => {
+        player.choiceValue = "";
+        if (player.choiceIndex !== -1) {
+          player.choiceValue = this.choices[player.choiceIndex]
+        }
+        return player;
+      })
+
+      this.voteValues = this.players.map(player => {return this.choices[player.choiceIndex]});
     },
     playerIdAssigned: function(id) {
       this.playerId = id;
@@ -80,22 +87,6 @@ export default {
   },
   mounted() {
     this.joinRoom(this.id);
-  },
-  computed: {
-    resultString() {
-      const yesSymbol = "✅";
-      const noSymbol = "❌";
-      let results = "";
-
-      for (let v in this.votes.filter(vote => vote === "yee")) {
-        results += yesSymbol;
-      }
-      for (let v in this.votes.filter(vote => vote === "nah")) {
-        results += noSymbol;
-      }
-
-      return results;
-    }
   },
   components: {
     editPlayerInfo: EditPlayerInfo

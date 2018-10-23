@@ -28,9 +28,9 @@ function createRouter(io) {
   //------//
 
   router.post("/createroom", function(req, res) {
-    const newRoomCode = roomManager.createNewRoom({ name: req.body.name });
-    console.log("Created", newRoomCode);
-    res.json({ success: true, code: newRoomCode });
+    const newRoomInfo = roomManager.createNewRoom({ name: req.body.name });
+    console.log("Created", newRoomInfo.roomCode);
+    res.json({ success: true, code: newRoomCode, adminKey: newRoomInfo.adminKey });
   });
   
   router.post("/checkroom", function(req, res) {

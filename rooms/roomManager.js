@@ -51,13 +51,22 @@ class RoomManager {
         // client will use this to join a room
         if (this.checkRoomExists(roomCode)) {
           socket.join(roomCode);
-          socket.nickname = "human";
-          socket.emoji = "grin";
           socket.roomCode = roomCode;
-          socket.playerId = generatePlayerId(12)
+
+
+          // TODO This player creation section should probably be a standalone class when I nail it down
+          socket.player = {}
+          
+          socket.player.nickname = "human";
+          socket.player.emoji = "😀";
+          socket.player.playerId = generatePlayerId(12);
+          socket.player.choiceIndex = -1;
+
+          socket.emit("playerIdAssigned", socket.player.playerId);
+          
           console.log(io.sockets.adapter.rooms[roomCode]);
-          socket.emit("playerIdAssigned", socket.playerId);
-          this.getRoomWithCode(roomCode).addPlayer(socket);
+          
+          this.getRoomWithCode(roomCode).addPlayer(socket.player);
           sendRoomUpdates(roomCode);
         }
         // TODO Probably need to do something different on joining a room than normal updates, we'll see
@@ -67,15 +76,16 @@ class RoomManager {
 
       socket.on("updateplayerinfo", info => {
         if (this.checkRoomExists(socket.roomCode)) {
-          socket.nickname = info.nickname;
-          socket.emoji = info.emoji;
+          socket.player.nickname = info.nickname;
+          socket.player.emoji = info.emoji;
+          sendRoomUpdates(socket.roomCode);
         }
       });
 
       socket.on("vote", choiceIndex => {
         if (this.checkRoomExists(socket.roomCode)) {
           let playerRoom = this.getRoomWithCode(socket.roomCode)
-          playerRoom.addPlayerVote(socket.playerId, choiceIndex);
+          playerRoom.addPlayerVote(socket.player.playerId, choiceIndex);
           sendRoomUpdates(socket.roomCode)
         }
         // TODO: Else send disconnect notice or something
@@ -88,10 +98,14 @@ class RoomManager {
   }
 
   createNewRoom(roomData) {
-    let newRoom = new Room(this.randomAvailableRoomCode(), this._io, roomData);
+    let newRoom = new Room(this.randomAvailableRoomCode(), roomData);
     this._rooms.push(newRoom);
     console.log(this._rooms)
-    return newRoom.code;
+    const adminKey = generatePlayerId(30);
+    return {
+      roomCode: newRoom.code,
+      adminKey: adminKey
+    };
   }
 
   randomAvailableRoomCode() {

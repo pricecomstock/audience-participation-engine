@@ -6,13 +6,13 @@
         <div class="field">
           <label class="label is-large">Emoji</label>
           <div class="control emoji-input">
-            <emoji-input v-model="emoji"></emoji-input>
+            <emoji-input @keydown.enter="submit()" v-model="emoji"></emoji-input>
           </div>
         </div>
         <div class="field">
           <label class="label is-large">Display Name</label>
           <div class="control">
-            <input class="input is-large" type="text" placeholder="human" v-model="nickname">
+            <input @keydown.enter="submit()" class="input is-large" type="text" placeholder="human" v-model="nickname">
           </div>
         </div>
         <div class="field is-grouped is-grouped-right">

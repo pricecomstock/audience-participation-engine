@@ -43,6 +43,8 @@ export default {
           name: this.roomName
         })
         .then(response => {
+          // TODO: Vuex the adminKey
+          // const adminKey = response.data.adminKey
           this.$router.push(`/watch/${response.data.code}`);
         });
     }

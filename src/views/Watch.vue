@@ -1,10 +1,33 @@
 <template>
     <div>
       <div>room code: {{ id }}</div>
-      <p>{{resultString}}</p>
+      <div class="columns is-centered">
+        <div class="column">
+          <div class="box">
+            <table class="table">
+              <thead>
+                <th>emoji</th>
+                <th>id</th>
+                <th>nickname</th>
+                <th>choice#</th>
+                <th>value</th>
+              </thead>
+              <tbody>
+                <tr v-for="(player, index) in players" :key="index">
+                  <td>{{player.emoji}}</td>
+                  <td>{{player.playerId}}</td>
+                  <td>{{player.nickname}}</td>
+                  <td>{{player.choiceIndex}}</td>
+                  <td>{{player.choiceValue}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
       <!-- <button class="button" @click="broadcast({msg: 'test'})">Broadcast</button> -->
     </div>
-    <!-- TODO: This is where all the d3.js stuff will go -->
+    <!-- TODO: https://github.com/mathisonian/d3moji -->
 </template>
 
 <script>
@@ -17,9 +40,9 @@ export default {
   },
   data() {
     return {
-      votes: [],
-      choices: [],
-      playerChoices: {}
+      players: [],
+      voteValues: [],
+      choices: []
     };
   },
   sockets: {
@@ -30,28 +53,25 @@ export default {
       console.log("received results from server", newState);
       // the votes come in the form of indices
       // have to remap them to actual choices
-      this.votes = newState.voteValues.map(voteIndex => this.choices[voteIndex]);
       this.choices = newState.choices;
-      this.playerChoices = newState.playerChoices;
-      console.table(Object.entries(this.playerChoices))
+      this.players = newState.players.map( (player) => {
+        player.choiceValue = "";
+        if (player.choiceIndex !== -1) {
+          player.choiceValue = this.choices[player.choiceIndex]
+        }
+        return player;
+      })
+
+      this.voteValues = this.players.map(player => {return this.choices[player.choiceIndex]});
     }
   },
   methods: {
-    joinRoom(room) {
+    joinRoomAsAdmin(room) {
       this.$socket.emit("room", room);
     }
   },
-  computed: {
-    resultString() {
-      let results = ''
-      Object.entries(this.playerChoices).forEach( pair => {
-        results += `${pair[0]} votes: ${pair[1]}\n`
-      })
-      return results
-    }
-  },
   mounted() {
-    this.joinRoom(this.id);
+    this.joinRoomAsAdmin(this.id);
   }
 };
 </script>
