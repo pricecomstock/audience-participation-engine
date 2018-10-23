@@ -1,6 +1,5 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Join from "./views/Join.vue";
 import Home from "./views/Home.vue";
 import Create from "./views/Create.vue";
 import Vote from "./views/Vote.vue";
@@ -22,11 +21,6 @@ export default new Router({
       path: "/create",
       name: "create",
       component: Create
-    },
-    {
-      path: "/join",
-      name: "join",
-      component: Join
     },
     {
       path: "/vote/:id",

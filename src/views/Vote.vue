@@ -1,14 +1,22 @@
 <template>
   <div class="container">
-    {{ playerId }}
-    <emoji-input></emoji-input>
-    <div v-for="(choice, index) in choices" class="button" @click="vote(index)" :key="index">{{ choice }}</div>
+    <div>
+      <span class="tag is-small is-warning">id: {{ playerId }}</span>
+    </div>
+
+    <div v-for="(choice, index) in choices" class="button is-large" @click="vote(index)" :key="index">{{ choice }}</div>
     {{resultString}}
+
+    <div>
+      <button class="button" @click="showEditPlayerInfo = !showEditPlayerInfo">Change player settings</button>
+    </div>
+    
+    <edit-player-info :class="{'is-active': showEditPlayerInfo}" @close="showEditPlayerInfo = false;"></edit-player-info>
   </div>
 </template>
 
 <script>
-import EmojiInput from '@/components/EmojiInput.vue';
+import EditPlayerInfo from '@/components/EditPlayerInfo.vue';
 
 export default {
   name: "vote",
@@ -21,8 +29,14 @@ export default {
     return {
       votes: [],
       choices: [],
-      playerName: "xyz", // TODO Make not static
-      playerId: ""
+      playerName: "newplayer", // TODO Make not static
+      playerEmoji: "😁",
+      playerId: "",
+      showEditPlayerInfo: false,
+      editedPlayerInfo: {
+        name: "",
+        emoji: ""
+      }
     };
   },
   sockets: {
@@ -58,6 +72,9 @@ export default {
     },
     joinRoom(room) {
       this.$socket.emit("room", room);
+    },
+    submitNewInfo() {
+      this.editPlayerInfo
     }
   },
   mounted() {
@@ -80,10 +97,9 @@ export default {
     }
   },
   components: {
-    emojiInput: EmojiInput
+    editPlayerInfo: EditPlayerInfo
   }
 };
-</script>
 </script>
 
 <style>
