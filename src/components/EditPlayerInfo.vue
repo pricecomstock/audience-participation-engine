@@ -48,11 +48,12 @@ export default {
       this.$emit("close");
     },
     submit() {
-      console.log("submitted")
+      console.log("submitted");
       this.$socket.emit("updateplayerinfo", {
         nickname: this.nickname,
         emoji: this.emoji
-      })
+      });
+      this.close();
     }
   },
   components: {

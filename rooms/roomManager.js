@@ -56,7 +56,8 @@ class RoomManager {
           socket.roomCode = roomCode;
           socket.playerId = generatePlayerId(12)
           console.log(io.sockets.adapter.rooms[roomCode]);
-          socket.emit("playerIdAssigned", socket.playerId)
+          socket.emit("playerIdAssigned", socket.playerId);
+          this.getRoomWithCode(roomCode).addPlayer(socket);
           sendRoomUpdates(roomCode);
         }
         // TODO Probably need to do something different on joining a room than normal updates, we'll see
@@ -68,7 +69,6 @@ class RoomManager {
         if (this.checkRoomExists(socket.roomCode)) {
           socket.nickname = info.nickname;
           socket.emoji = info.emoji;
-          console.log(socket)
         }
       });
 

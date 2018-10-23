@@ -72,6 +72,7 @@ export default {
     },
     joinRoom(room) {
       this.$socket.emit("room", room);
+      this.showEditPlayerInfo = true;
     },
     submitNewInfo() {
       this.editPlayerInfo

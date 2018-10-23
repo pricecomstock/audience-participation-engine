@@ -22,11 +22,17 @@ class Room {
   get choices() {
     return this._choices;
   }
+
+  getPlayerWithId(playerId) {
+    return this._players.find(playerSocket => {
+      return playerSocket.playerId === playerId;
+    })
+  }
   
   // TODO: Add player object and use that to track player votes and states.
   // It would probably work ok across different games and stuff too.
-  addPlayer(player) {
-    this._players.push(player);
+  addPlayer(socket) {
+    this._players.push(socket);
   }
   
   get players() {

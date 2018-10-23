@@ -20,7 +20,7 @@ export default {
     emojiModel: {
       get() {return this.value},
       set(v) {
-        console.log(v.at(0))
+        // console.log(v.at(0))
         this.$emit("input", v.at(0))
       }
     }

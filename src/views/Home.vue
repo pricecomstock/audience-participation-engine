@@ -6,7 +6,7 @@
       <div class="column is-one-quarter-tablet is-two-thirds-mobile">
         <div class="field has-addons is-expanded">
           <div class="control is-expanded">
-            <input class="input is-large is-uppercase" type="text" placeholder="Code" v-model.trim="code">
+            <input class="input is-large is-uppercase" type="text" placeholder="Code" v-model.trim="code" @keydown.enter="joinRoom()">
           </div>
           <div class="control">
             <a class="button is-primary is-large" @click="joinRoom()">
