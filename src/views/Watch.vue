@@ -1,6 +1,11 @@
 <template>
     <div>
       <div class="columns is-centered">
+        <div class="column is-full">
+          <vote-chart></vote-chart>
+        </div>
+      </div>
+      <div class="columns is-centered">
         <div class="column is-half">
           <span class="tag is-warning is-large">{{ id }}</span>
           <div class="box">
@@ -38,10 +43,13 @@
             </div>
             <div class="field is-grouped is-grouped-right">
               <div class="control">
-                <button class="button" @click="submitNewChoices(newChoicesList)">Reset Votes</button>
+                <button class="button is-success is-outlined" @click="resetVotes()">Lock Votes</button>
               </div>
               <div class="control">
-                <button class="button is-warning" @click="submitNewChoices(newChoicesList)">New Choices</button>
+                <button class="button is-warning is-outlined" @click="resetVotes()">Reset Votes</button>
+              </div>
+              <div class="control">
+                <button class="button" @click="submitNewChoices(newChoicesList)">New Choices</button>
               </div>
             </div>
           </div>
@@ -53,6 +61,8 @@
 </template>
 
 <script>
+import VoteChart from '@/components/VoteChart.vue'
+
 export default {
   name: 'watch',
   props: {
@@ -110,6 +120,9 @@ export default {
   },
   mounted() {
     this.joinRoomAsAdmin(this.id);
+  },
+  components: {
+    voteChart: VoteChart
   }
 };
 </script>
