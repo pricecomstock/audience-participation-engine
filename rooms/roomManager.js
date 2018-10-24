@@ -70,6 +70,11 @@ class RoomManager {
         }
       });
 
+      socket.on("disconnect", reason => {
+        console.log("disconnect", reason);
+        // rooms are left automatically upon disconnection
+      })
+
       socket.on("roomadminjoin", data => {
         let roomCode = data.roomCode
         // TODO Also check admin key
@@ -87,6 +92,16 @@ class RoomManager {
         if (this.checkRoomExists(socket.roomCode)) {
           let room = this.getRoomWithCode(socket.roomCode)
           room.newVote(newChoicesList)
+
+          sendRoomUpdates(socket.roomCode);
+        }
+      });
+      
+      socket.on("resetvotes", adminKey => {
+        // TODO Also check admin key
+        if (this.checkRoomExists(socket.roomCode)) {
+          let room = this.getRoomWithCode(socket.roomCode);
+          room.resetVotes();
 
           sendRoomUpdates(socket.roomCode);
         }

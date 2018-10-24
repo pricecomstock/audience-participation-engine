@@ -1,14 +1,17 @@
 <template>
   <div class="container">
+    <div class="tags has-addons">
+      <span class="tag is-light is-large is-rounded">{{localPlayer.emoji}}</span>
+      <span class="tag is-dark is-large is-rounded">{{localPlayer.nickname}}</span>
+    </div>
     <div>
       <span class="tag is-small is-warning">id: {{ playerId }}</span>
     </div>
+    <div>
+      <button class="button is-white" @click="showEditPlayerInfo = !showEditPlayerInfo">edit player info</button>
+    </div>
 
     <div v-for="(choice, index) in choices" class="button is-large" @click="vote(index)" :key="index">{{ choice }}</div>
-
-    <div>
-      <button class="button" @click="showEditPlayerInfo = !showEditPlayerInfo">Change player settings</button>
-    </div>
     
     <edit-player-info :class="{'is-active': showEditPlayerInfo}" @close="showEditPlayerInfo = false;"></edit-player-info>
   </div>
@@ -26,16 +29,15 @@ export default {
   },
   data() {
     return {
-      votes: [],
+      players: [], // TODO This may not be needed
+      voteValues: [],
       choices: [],
-      playerName: "newplayer", // TODO Make not static
-      playerEmoji: "😁",
-      playerId: "",
-      showEditPlayerInfo: false,
-      editedPlayerInfo: {
-        name: "",
+      localPlayer: {
+        nickname: "",
         emoji: ""
-      }
+      },
+      playerId: "",
+      showEditPlayerInfo: false
     };
   },
   sockets: {
@@ -53,6 +55,10 @@ export default {
           player.choiceValue = this.choices[player.choiceIndex]
         }
         return player;
+      })
+
+      this.localPlayer = this.players.find( player => {
+        return player.playerId === this.playerId;
       })
 
       this.voteValues = this.players.map(player => {return this.choices[player.choiceIndex]});

@@ -24,6 +24,12 @@
             </table>
           </div>
           <div class="box">
+              <label class="label">Current Choices</label>
+            <div class="tags">
+              <span class="tag is-light is-large" v-for="(choice, index) in choices" :key="index">{{choice}}</span>
+            </div>
+          </div>
+          <div class="box">
             <div class="field">
               <label class="label">New Choices</label>
               <div class="control">
@@ -32,7 +38,10 @@
             </div>
             <div class="field is-grouped is-grouped-right">
               <div class="control">
-                <button class="button is-primary" @click="submitNewChoices(newChoicesList)">Submit</button>
+                <button class="button" @click="submitNewChoices(newChoicesList)">Reset Votes</button>
+              </div>
+              <div class="control">
+                <button class="button is-warning" @click="submitNewChoices(newChoicesList)">New Choices</button>
               </div>
             </div>
           </div>
@@ -89,6 +98,9 @@ export default {
     submitNewChoices() {
       //TODO Add admin key
       this.$socket.emit("newchoices", this.newChoicesList)
+    },
+    resetVotes() {
+      this.$socket.emit("resetvotes", "")
     }
   },
   computed: {
