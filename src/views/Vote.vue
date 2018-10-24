@@ -44,6 +44,9 @@ export default {
     connect: function() {
       console.log("socket connected");
     },
+    disconnect: function(reason) {
+      console.log("disconnected", reason)
+    },
     state: function(newState) {
       console.log("received results from server", newState);
       // the votes come in the form of indices
@@ -83,12 +86,17 @@ export default {
       // console.table(voteInfo);
       this.$socket.emit("vote", choiceIndex);
     },
-    joinRoom(room) {
-      this.$socket.emit("room", room);
-      this.showEditPlayerInfo = true;
-    },
-    submitNewInfo() {
-      this.editPlayerInfo
+    joinRoom(roomCode) {
+      let existingPlayerIdForRoom = sessionStorage.getItem(roomCode);
+      console.log("existing id", existingPlayerIdForRoom)
+      this.$socket.emit("room", {
+        roomCode: roomCode,
+        requestedId: existingPlayerIdForRoom
+      });
+      // FIXME This is definitely not a 100% thing but should work as long as no one tries to reconn to a closed room
+      if (!existingPlayerIdForRoom) {
+        this.showEditPlayerInfo = true;
+      }
     }
   },
   mounted() {

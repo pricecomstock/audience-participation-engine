@@ -46,33 +46,59 @@ class RoomManager {
       // console.log(code, "a user connected");
 
       // When client joins a room
-      socket.on("room", roomCode => {
+      socket.on("room", data => {
         // client will use this to join a room
+        const roomCode = data.roomCode;
+        const requestedId = data.requestedId
+
+        class Player {
+          constructor() {
+            this.connected = true;
+            this.nickname = "human-" + generatePlayerId(2);
+            this.emoji = "😀";
+            this.playerId = generatePlayerId(12);
+            this.choiceIndex = -1;
+          }
+        }
+        
+        if (socket.rooms) { // socket already was in a room
+          socket.leaveAll();
+          socket.roomCode = "";
+        }
+
         if (this.checkRoomExists(roomCode)) {
+          let joinedRoom = this.getRoomWithCode(roomCode);
+          console.log("Joined room code", roomCode)
           socket.join(roomCode);
           socket.roomCode = roomCode;
 
-
-          // TODO This player creation section should probably be a standalone class when I nail it down
-          socket.player = {}
-          
-          socket.player.nickname = "human";
-          socket.player.emoji = "😀";
-          socket.player.playerId = generatePlayerId(12);
-          socket.player.choiceIndex = -1;
-
+          if (requestedId) {
+            console.log("player reconnecting")
+            let existingPlayer = joinedRoom.getPlayerWithId(requestedId);
+            if (existingPlayer) {
+              console.log("Player exists!", existingPlayer);
+              socket.player = existingPlayer;
+              socket.player.connected = true;
+            } else {
+              console.log("Player does not exist, creating a new one.");
+              socket.player = new Player();
+            }
+          } else {
+            socket.player = new Player();
+            joinedRoom.addPlayer(socket.player);
+          }
+      
           socket.emit("playerIdAssigned", socket.player.playerId);
-          
-          console.log(io.sockets.adapter.rooms[roomCode]);
-          
-          this.getRoomWithCode(roomCode).addPlayer(socket.player);
           sendRoomUpdates(roomCode);
         }
       });
 
       socket.on("disconnect", reason => {
-        console.log("disconnect", reason);
-        // rooms are left automatically upon disconnection
+        if (socket.player) {
+          console.log("disconnect", reason);
+          socket.player.connected = false;
+          // rooms are left automatically upon disconnection
+        }
       })
 
       socket.on("roomadminjoin", data => {
