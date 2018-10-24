@@ -2,12 +2,16 @@
     <div>
       <div class="columns is-centered">
         <div class="column is-full">
-          <vote-chart></vote-chart>
+          <vote-chart :gameState="dummyGameState"></vote-chart>
         </div>
       </div>
       <div class="columns is-centered">
         <div class="column is-half">
           <span class="tag is-warning is-large">{{ id }}</span>
+          <div class="box" v-if="debug">
+            <div class="button" @click="addDummyPlayer()">Add Dummy Player</div>
+            <div class="button" @click="removeDummyPlayer()">Remove Dummy Player</div>
+          </div>
           <div class="box">
             <table class="table is-fullwidth is-striped">
               <thead>
@@ -18,7 +22,7 @@
                 <th>value</th>
               </thead>
               <tbody>
-                <tr v-for="(player, index) in players" :key="index">
+                <tr v-for="(player, index) in dummyPlayers" :key="index">
                   <td>{{player.emoji}}</td>
                   <td>{{player.playerId}}</td>
                   <td>{{player.nickname}}</td>
@@ -38,7 +42,7 @@
             <div class="field">
               <label class="label">New Choices</label>
               <div class="control">
-                <textarea class="textarea" placeholder="enter one choice per line" v-model="newChoices"></textarea>
+                <textarea class="textarea" placeholder="enter one choice per line" v-model.trim="newChoices"></textarea>
               </div>
             </div>
             <div class="field is-grouped is-grouped-right">
@@ -75,7 +79,9 @@ export default {
       players: [],
       voteValues: [],
       choices: [],
-      newChoices: ''
+      newChoices: '',
+      debug: true,
+      dummyPlayers: []
     };
   },
   sockets: {
@@ -111,11 +117,37 @@ export default {
     },
     resetVotes() {
       this.$socket.emit("resetvotes", "")
+    },
+    addDummyPlayer() {
+      this.dummyPlayers.push({
+        emoji: '👻',
+        playerId: `xyz${Math.random()}`,
+        nickname: 'ghost',
+        choiceIndex: Math.floor(Math.random() * (this.choices.length + 1) - 1),
+        choiceValue: "",
+      })
+    },
+    removeDummyPlayer() {
+      this.dummyPlayers.shift()
     }
   },
   computed: {
     newChoicesList() {
       return this.newChoices.split('\n').map( choice => {return choice.trim()});
+    },
+    gameState() {
+      return {
+        choices: this.choices,
+        players: this.players
+      }
+    },
+    dummyGameState() {
+      let dummyState = {
+        choices: this.choices.slice(0),
+        players: this.dummyPlayers.slice(0).concat(this.players)
+      }
+
+      return dummyState
     }
   },
   mounted() {
