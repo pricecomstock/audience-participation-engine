@@ -22,9 +22,10 @@ app.use("/api", api);
 // TODO: make it so incorrect API calls don't fall through to vue-router
 
 // Everything else should fall through to vue-router
-app.use(serveStatic(__dirname + "/dist/index.html"));
+app.use(serveStatic(__dirname + "/dist"));
 app.get("/*", function(req, res) {
   // FIX: This path might be incorrect for Vue-CLI 3
+  console.log("dirname", __dirname)
   res.sendFile(__dirname + "/dist/index.html");
 });
 
