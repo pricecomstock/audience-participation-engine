@@ -1,17 +1,21 @@
 <template>
   <div class="container">
     <div class="tags has-addons">
-      <span class="tag is-light is-large is-rounded">{{localPlayer.emoji}}</span>
+      <span class="tag is-large has-text-small" @click="showEditPlayerInfo = !showEditPlayerInfo">
+        <span class="icon has-text-warning">
+          <i class="fas fa-edit"></i>
+        </span>
+      </span>
       <span class="tag is-dark is-large is-rounded">{{localPlayer.nickname}}</span>
+      <span class="tag is-light is-large is-rounded">{{localPlayer.emoji}}</span>
     </div>
-    <div>
+    <!-- <div>
       <span class="tag is-small is-warning">id: {{ playerId }}</span>
-    </div>
-    <div>
-      <button class="button is-white" @click="showEditPlayerInfo = !showEditPlayerInfo">edit player info</button>
-    </div>
+    </div> -->
 
-    <div v-for="(choice, index) in choices" class="button is-large" @click="vote(index)" :key="index">{{ choice }}</div>
+    <div v-for="(choice, index) in choices" :key="index">
+      <div class="button is-large is-fullwidth" @click="vote(index)">{{ choice }}</div>
+    </div>
     
     <edit-player-info :class="{'is-active': showEditPlayerInfo}" @close="showEditPlayerInfo = false;"></edit-player-info>
   </div>
