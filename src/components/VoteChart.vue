@@ -1,5 +1,18 @@
 <template>
   <svg :width="width" :height="height" @click="continueSimulation()">
+    <g v-for="(choice, index) in gameState.choices" :key="`zone${index}`">
+      <rect 
+        :x="(width/gameState.choices.length) * index"
+        :y="0"
+        :width="width/gameState.choices.length"
+        :height="height*0.7"
+        :fill="colors(index)"></rect>
+      <text 
+        text-anchor="left"
+        :x="(width/gameState.choices.length) * index + 5"
+        y="20"
+        >{{choice}}</text>
+    </g>
     <g v-for="(node, index) in nodes" :key="index">
       <circle :r="radius" :cx="node.x" :cy="node.y" :fill="node.color" fill-opacity="0" stroke="black" stroke-width="2px">
       </circle>
@@ -34,7 +47,8 @@ export default {
       // choiceSim: null,
       zones: [{x:0, y:0}],
       forces: [{label: 'posX0', force: d3.forceX(0)}],
-      maxZonesHad: 0
+      maxZonesHad: 0,
+      colors: d3.scaleOrdinal(d3.schemePastel2)
     }
   },
   computed: {
@@ -46,8 +60,8 @@ export default {
     },
     emojiClasses() {
       return {
-        'font-size': `${this.emojiFontSizeForPlayers(this.nodes.length)}em`,
-        'transform': `translateY(${this.emojiOffsetForPlayers(this.nodes.length)}em)`
+        'font-size': `${this.emojiFontSizeForRadius(this.radius)}em`,
+        'transform': `translateY(${this.emojiOffsetForRadius(this.radius)}em)`
       }
     }
   },
@@ -163,7 +177,7 @@ export default {
         choiceForces.push({
           label: `posX${index}`,
           force: d3.forceX(this.zones[index].x).strength( (node, i) => {
-            return node.player.choiceIndex === index ? 0.04 : 0;
+            return node.player.choiceIndex === index ? 0.08 : 0;
           })
         }) 
         choiceForces.push({
@@ -179,16 +193,17 @@ export default {
         force: d3.forceCollide(this.radius + this.buffer)
       })
 
-      let neutralForceStrength = (node, i) => {
-        return node.player.choiceIndex === -1 ? 0.06 : 0;
-      }
       choiceForces.push({
         label: 'neutralX',
-        force: d3.forceX(this.width/2).strength(neutralForceStrength)
+        force: d3.forceX(this.width/2).strength((node, i) => {
+          return node.player.choiceIndex === -1 ? 0.02 : 0;
+        })
       })
       choiceForces.push({
         label: 'neutralY',
-        force: d3.forceY(this.height * 0.85).strength(neutralForceStrength)
+        force: d3.forceY(this.height * 0.9).strength((node, i) => {
+          return node.player.choiceIndex === -1 ? 0.07 : 0;
+        })
       })
 
       // choiceForces.push({
@@ -204,9 +219,9 @@ export default {
         this.simulation.force(`posY${zoneIndex}`, null)
       })
     },
-    radiusForPlayers: d3.scaleLinear().domain([0,50]).range([35, 25]),
-    emojiFontSizeForPlayers: d3.scaleLinear().domain([0,50]).range([2.9, 2]),
-    emojiOffsetForPlayers: d3.scaleLinear().domain([0,50]).range([0.35, 0.28])
+    radiusForPlayers: d3.scaleLinear().domain([0,50]).range([30, 20]),
+    emojiFontSizeForRadius: d3.scaleLinear().domain([20,30]).range([1.5, 2.5]),
+    emojiOffsetForRadius: d3.scaleLinear().domain([20,30]).range([0.35, 0.28])
   },
   mounted() {
     this.createNodes();
