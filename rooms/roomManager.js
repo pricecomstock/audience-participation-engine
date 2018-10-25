@@ -133,6 +133,17 @@ class RoomManager {
           sendRoomUpdates(socket.roomCode);
         }
       });
+      
+      socket.on("lockvotes", locked => {
+        // TODO Also check admin key
+        if (this.checkRoomExists(socket.roomCode)) {
+          let room = this.getRoomWithCode(socket.roomCode);
+          console.log("locking room")
+          room.setLock(locked);
+
+          sendRoomUpdates(socket.roomCode);
+        }
+      });
 
       socket.on("updateplayerinfo", info => {
         if (this.checkRoomExists(socket.roomCode)) {

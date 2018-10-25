@@ -12,15 +12,26 @@
     <!-- <div>
       <span class="tag is-small is-warning">id: {{ playerId }}</span>
     </div> -->
-
+    
     <div class="buttons">
       <div 
+        :disabled="locked"
         v-for="(choice, index) in choices" 
         :key="index" 
         class="button is-large" 
         :class="{'is-fullwidth': choices.length < 5, 'is-primary': index === localPlayer.choiceIndex}" 
         @click="vote(index)">{{ choice }}</div>
     </div>
+
+    <section class="hero" v-if="locked">
+      <div class="hero-body">
+        <div class="container">
+          <span class="icon is-large has-text-danger">
+            <i class="fas fa-3x fa-lock"></i>
+          </span>
+        </div>
+      </div>
+    </section>
     
     <edit-player-info 
       :class="{'is-active': showEditPlayerInfo}" 
@@ -46,6 +57,7 @@ export default {
       players: [], // TODO This may not be needed
       voteValues: [],
       choices: [],
+      locked: false,
       localPlayer: {
         nickname: "human",
         emoji: "😀",
@@ -75,6 +87,8 @@ export default {
         return player;
       })
 
+      this.locked = newState.locked;
+
       this.localPlayer = this.players.find( player => {
         return player.playerId === this.playerId;
       })
@@ -99,7 +113,9 @@ export default {
       //   room: this.id
       // };
       // console.table(voteInfo);
-      this.$socket.emit("vote", choiceIndex);
+      if (!this.locked) {
+        this.$socket.emit("vote", choiceIndex);
+      }
     },
     joinRoom(roomCode) {
       let existingPlayerIdForRoom = sessionStorage.getItem(roomCode);

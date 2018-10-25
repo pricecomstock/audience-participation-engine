@@ -9,6 +9,7 @@ class Room {
     // Room state
     this._choices = ['Yes', 'No']
     this._players = [];
+    this._locked = false;
   }
   
   get code() {
@@ -45,7 +46,8 @@ class Room {
     console.table(this._players)
     let state = {
       choices: this.choices,
-      players: this.players
+      players: this.players,
+      locked: this._locked
     }
     return state
   }
@@ -59,6 +61,11 @@ class Room {
     this._players.forEach( player => {
       player.choiceIndex = -1;
     })
+    // TODO maybe auto unlock votes
+  }
+
+  setLock(locked) {
+    this._locked = locked
   }
 }
 

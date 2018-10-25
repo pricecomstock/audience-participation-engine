@@ -27,7 +27,8 @@
             </div>
             <div class="field is-grouped is-grouped-right">
               <div class="control">
-                <button class="button is-success is-outlined" @click="resetVotes()">Lock Votes</button>
+                <button v-if="!locked" class="button is-success is-outlined" @click="lockVotes()">Lock Votes</button>
+                <button v-else class="button is-danger" @click="unlockVotes()">Unlock Votes</button>
               </div>
               <div class="control">
                 <button class="button is-warning is-outlined" @click="resetVotes()">Reset Votes</button>
@@ -81,7 +82,8 @@ export default {
       choices: [],
       newChoices: '',
       debug: false,
-      dummyPlayers: []
+      dummyPlayers: [],
+      locked: false
     };
   },
   sockets: {
@@ -100,6 +102,7 @@ export default {
         }
         return player;
       })
+      this.locked = newState.locked;
 
       this.voteValues = this.players.map(player => {return this.choices[player.choiceIndex]});
     }
@@ -117,6 +120,12 @@ export default {
     },
     resetVotes() {
       this.$socket.emit("resetvotes", "")
+    },
+    lockVotes() {
+      this.$socket.emit("lockvotes", true)
+    },
+    unlockVotes() {
+      this.$socket.emit("lockvotes", false)
     },
     addDummyPlayer() {
       this.dummyPlayers.push({
