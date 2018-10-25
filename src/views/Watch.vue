@@ -2,7 +2,7 @@
     <div>
       <div class="columns is-centered">
         <div class="column is-full">
-          <vote-chart :gameState="dummyGameState"></vote-chart>
+          <vote-chart :gameState="gameState"></vote-chart>
         </div>
       </div>
       <div class="columns is-centered">
@@ -11,26 +11,6 @@
           <div class="box" v-if="debug">
             <div class="button" @click="addDummyPlayer()">Add Dummy Player</div>
             <div class="button" @click="removeDummyPlayer()">Remove Dummy Player</div>
-          </div>
-          <div class="box">
-            <table class="table is-fullwidth is-striped">
-              <thead>
-                <th>emoji</th>
-                <th>id</th>
-                <th>nickname</th>
-                <th>choice#</th>
-                <th>value</th>
-              </thead>
-              <tbody>
-                <tr v-for="(player, index) in players" :key="index">
-                  <td>{{player.emoji}}</td>
-                  <td>{{player.playerId}}</td>
-                  <td>{{player.nickname}}</td>
-                  <td>{{player.choiceIndex}}</td>
-                  <td>{{player.choiceValue}}</td>
-                </tr>
-              </tbody>
-            </table>
           </div>
           <div class="box">
               <label class="label">Current Choices</label>
@@ -57,6 +37,26 @@
               </div>
             </div>
           </div>
+          <div class="box">
+            <table class="table is-fullwidth is-striped">
+              <thead>
+                <th>emoji</th>
+                <th>id</th>
+                <th>nickname</th>
+                <th>choice#</th>
+                <th>value</th>
+              </thead>
+              <tbody>
+                <tr v-for="(player, index) in players" :key="index">
+                  <td>{{player.emoji}}</td>
+                  <td>{{player.playerId}}</td>
+                  <td>{{player.nickname}}</td>
+                  <td>{{player.choiceIndex}}</td>
+                  <td>{{player.choiceValue}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
       <!-- <button class="button" @click="broadcast({msg: 'test'})">Broadcast</button> -->
@@ -80,7 +80,7 @@ export default {
       voteValues: [],
       choices: [],
       newChoices: '',
-      debug: true,
+      debug: false,
       dummyPlayers: []
     };
   },
