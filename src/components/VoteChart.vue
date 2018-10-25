@@ -7,15 +7,22 @@
         :width="width/gameState.choices.length"
         :height="height*0.7"
         :fill="colors(index)"></rect>
-      <text 
-        text-anchor="left"
-        :x="(width/gameState.choices.length) * index + 5"
-        y="20"
+      <text
+        class="zone-label"
+        text-anchor="middle"
+        :x="(width/gameState.choices.length) * index + (width/gameState.choices.length)/2"
+        :y="height*0.05"
         >{{choice}}</text>
+      <text
+        class="vote-count"
+        text-anchor="middle"
+        :x="(width/gameState.choices.length) * index + (width/gameState.choices.length)/2"
+        :y="height*0.77"
+        >{{ gameState.players.filter(player=>{return player.choiceIndex === index}).length }}</text>
     </g>
     <g v-for="(node, index) in nodes" :key="index">
-      <circle :r="radius" :cx="node.x" :cy="node.y" :fill="node.color" fill-opacity="0" stroke="black" stroke-width="2px">
-      </circle>
+      <!-- <circle :r="radius" :cx="node.x" :cy="node.y" :fill="node.color" fill-opacity="0" stroke="black" stroke-width="2px">
+      </circle> -->
       <text :style="emojiClasses" text-anchor="middle" :x="node.x" :y="node.y">{{node.player.emoji}}</text>
     </g>
   </svg>
@@ -37,7 +44,7 @@ export default {
   },
   data() {
     return {
-      width: 900,
+      width: 1100,
       height: 500,
       nodes: null,
       root: null,
@@ -48,15 +55,29 @@ export default {
       zones: [{x:0, y:0}],
       forces: [{label: 'posX0', force: d3.forceX(0)}],
       maxZonesHad: 0,
-      colors: d3.scaleOrdinal(d3.schemePastel2)
+      colors: d3.scaleOrdinal(d3.schemePastel2),
+      edgeBuffer: 10
     }
   },
   computed: {
+    // FIXME gave up on this because it wasn't strictly necessary and was taking a while
+    // voteCounts() {
+    //   console.log("votecounts")
+    //   let choiceIndices = gameState.players.map((player)=>{return player.choiceIndex})
+    //   console.log(choiceIndices)
+    //   choiceCounts = new Array(this.gameState.choices.length).fill(0)
+    //   choiceIndices.forEach(choiceIndex => {
+    //     choiceCounts[choiceIndex] += 1;
+    //   })
+    //   console.log(choiceCounts)
+
+    //   return choiceCounts
+    // },
     radius() {
       return this.radiusForPlayers(this.nodes.length);
     },
     buffer() {
-      return 4;
+      return 0;
     },
     emojiClasses() {
       return {
@@ -152,10 +173,12 @@ export default {
     //   // this.force.initialize(this.nodes)
     // },
     calculateZones() {
+      let numChoices = this.gameState.choices.length;
+      let bufferZone = this.width * 0.5 / numChoices;
       // TODO better algorithm with vertical separation
       let xScale = d3.scaleLinear()
-        .domain([0, this.gameState.choices.length - 1])
-        .range([this.width * 0.15, this.width * 0.85])
+        .domain([0, numChoices - 1])
+        .range([bufferZone, this.width - bufferZone])
 
       let yScale = index => { return this.height * 0.3}
 
@@ -183,7 +206,7 @@ export default {
         choiceForces.push({
           label: `posY${index}`,
           force: d3.forceY(this.zones[index].y).strength( (node, i) => {
-            return node.player.choiceIndex === index ? 0.04 : 0;
+            return node.player.choiceIndex === index ? 0.03 : 0;
           })
         }) 
       })
@@ -192,6 +215,11 @@ export default {
         label: 'collide',
         force: d3.forceCollide(this.radius + this.buffer)
       })
+      
+      // choiceForces.push({
+      //   label: 'boundary',
+      //   force: (alpha) => {}
+      // })
 
       choiceForces.push({
         label: 'neutralX',
@@ -220,8 +248,8 @@ export default {
       })
     },
     radiusForPlayers: d3.scaleLinear().domain([0,50]).range([30, 20]),
-    emojiFontSizeForRadius: d3.scaleLinear().domain([20,30]).range([1.5, 2.5]),
-    emojiOffsetForRadius: d3.scaleLinear().domain([20,30]).range([0.35, 0.28])
+    emojiFontSizeForRadius: d3.scaleLinear().domain([20,30]).range([1.8, 2.8]),
+    emojiOffsetForRadius: d3.scaleLinear().domain([20,30]).range([0.4, 0.31])
   },
   mounted() {
     this.createNodes();
@@ -256,6 +284,15 @@ export default {
 .chartemoji {
   font-size: 1.8em;
   transform: translateY(7px);
+}
+
+.zone-label {
+  text-transform: uppercase;
+  font-size: 1.5em;
+}
+
+.vote-count {
+  font-size: 2em;
 }
 
 </style>
