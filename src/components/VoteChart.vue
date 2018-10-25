@@ -1,13 +1,17 @@
 <template>
   <svg :width="width" :height="height" @click="continueSimulation()">
-    <g>
-      <circle v-for="(node, index) in nodes" :key="index" :r="radius" :cx="node.x" :cy="node.y" :fill="node.color" stroke="black" stroke-width="2px"></circle>
+    <g v-for="(node, index) in nodes" :key="index">
+      <circle :r="radius" :cx="node.x" :cy="node.y" :fill="node.color" fill-opacity="0" stroke="black" stroke-width="2px">
+      </circle>
+      <text :style="emojiClasses" text-anchor="middle" :x="node.x" :y="node.y">{{node.player.emoji}}</text>
     </g>
   </svg>
 </template>
 
 <script>
 import * as d3 from 'd3'
+import * as d3moji from 'd3moji'
+// d3moji(d3)
 // import d3Force from 'd3-force'
 // import d3Quadtree from 'd3-quadtree'
 
@@ -35,10 +39,16 @@ export default {
   },
   computed: {
     radius() {
-      return 10;
+      return this.radiusForPlayers(this.nodes.length);
     },
     buffer() {
       return 4;
+    },
+    emojiClasses() {
+      return {
+        'font-size': `${this.emojiFontSizeForPlayers(this.nodes.length)}em`,
+        'transform': `translateY(${this.emojiOffsetForPlayers(this.nodes.length)}em)`
+      }
     }
   },
   methods: {
@@ -193,10 +203,12 @@ export default {
         this.simulation.force(`posX${zoneIndex}`, null)
         this.simulation.force(`posY${zoneIndex}`, null)
       })
-    }
+    },
+    radiusForPlayers: d3.scaleLinear().domain([0,50]).range([35, 25]),
+    emojiFontSizeForPlayers: d3.scaleLinear().domain([0,50]).range([2.9, 2]),
+    emojiOffsetForPlayers: d3.scaleLinear().domain([0,50]).range([0.35, 0.28])
   },
   mounted() {
-    console.log(this.gameState)
     this.createNodes();
     this.createSimulation()
     this.calculateZones();
@@ -217,13 +229,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-svg {
-  margin: 25px;
-  path {
-    fill: none;
-    stroke: #76BF8A;
-    stroke-width: 3px
-  }
+// svg {
+//   margin: 25px;
+//   path {
+//     fill: none;
+//     stroke: #76BF8A;
+//     stroke-width: 3px
+//   }
+// }
+
+.chartemoji {
+  font-size: 1.8em;
+  transform: translateY(7px);
 }
 
 </style>

@@ -22,7 +22,7 @@
                 <th>value</th>
               </thead>
               <tbody>
-                <tr v-for="(player, index) in dummyPlayers" :key="index">
+                <tr v-for="(player, index) in players" :key="index">
                   <td>{{player.emoji}}</td>
                   <td>{{player.playerId}}</td>
                   <td>{{player.nickname}}</td>
