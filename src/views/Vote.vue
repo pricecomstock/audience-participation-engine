@@ -2,7 +2,7 @@
   <div class="container">
     <div class="tags has-addons">
       <span class="tag is-large has-text-small" @click="showEditPlayerInfo = !showEditPlayerInfo">
-        <span class="icon has-text-warning">
+        <span class="icon is-large">
           <i class="fas fa-edit"></i>
         </span>
       </span>
@@ -13,11 +13,21 @@
       <span class="tag is-small is-warning">id: {{ playerId }}</span>
     </div> -->
 
-    <div v-for="(choice, index) in choices" :key="index">
-      <div class="button is-large is-fullwidth" @click="vote(index)">{{ choice }}</div>
+    <div class="buttons">
+      <div 
+        v-for="(choice, index) in choices" 
+        :key="index" 
+        class="button is-large" 
+        :class="{'is-fullwidth': choices.length < 5, 'is-primary': index === localPlayer.choiceIndex}" 
+        @click="vote(index)">{{ choice }}</div>
     </div>
     
-    <edit-player-info :class="{'is-active': showEditPlayerInfo}" @close="showEditPlayerInfo = false;"></edit-player-info>
+    <edit-player-info 
+      :class="{'is-active': showEditPlayerInfo}" 
+      @close="showEditPlayerInfo = false;" 
+      :is-open="showEditPlayerInfo"
+      :previousEmoji="this.localPlayer.emoji" 
+      :previousNickname="this.localPlayer.nickname"></edit-player-info>
   </div>
 </template>
 
@@ -37,8 +47,9 @@ export default {
       voteValues: [],
       choices: [],
       localPlayer: {
-        nickname: "",
-        emoji: ""
+        nickname: "human",
+        emoji: "😀",
+        choiceIndex: -1
       },
       playerId: "",
       showEditPlayerInfo: false

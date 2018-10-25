@@ -38,6 +38,7 @@
 import EmojiInput from '@/components/EmojiInput.vue';
 
 export default {
+  props: ['previousEmoji', 'previousNickname', 'isOpen'],
   data() {
     return {
       nickname: '',
@@ -50,15 +51,23 @@ export default {
     },
     submit() {
       console.log("submitted");
-      this.$socket.emit("updateplayerinfo", {
-        nickname: this.nickname,
-        emoji: this.emoji
-      });
-      this.close();
+      if (this.emoji !== "") {
+        this.$socket.emit("updateplayerinfo", {
+          nickname: this.nickname,
+          emoji: this.emoji
+        });
+        this.close();
+      }
     }
   },
   components: {
     emojiInput: EmojiInput
+  },
+  watch: {
+    isOpen() {
+      this.nickname = this.previousNickname;
+      this.emoji = this.previousEmoji;
+    }
   }
 }
 </script>
