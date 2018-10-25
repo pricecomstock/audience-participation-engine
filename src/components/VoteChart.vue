@@ -26,6 +26,8 @@ export default {
       root: null,
       line: '',
       simulation: null,
+      // choiceNodes: null,
+      // choiceSim: null,
       zones: [{x:0, y:0}],
       forces: [{label: 'posX0', force: d3.forceX(0)}],
       maxZonesHad: 0
@@ -33,10 +35,10 @@ export default {
   },
   computed: {
     radius() {
-      return 4;
+      return 10;
     },
     buffer() {
-      return 2;
+      return 4;
     }
   },
   methods: {
@@ -50,44 +52,43 @@ export default {
     createNodes() {
       this.nodes = this.gameState.players.map( (player, i) => {
         return {
-          emoji: player.emoji,
           x: Math.random() * this.width,
           y: Math.random() * this.height,
           color: d3.gray(i*2),
-          choiceIndex: player.choiceIndex,
-          playerId: player.playerId                                           
+          player: player                                    
         }
       })
     },
     syncNodes() {
       this.nodes = this.nodes.filter( (node, i) => { // remove players that have left
-        this.gameState.players.some( player => { // will be true if any gamestate players match playerId
-          return node.playerId === player.playerId
+        return this.gameState.players.some( player => { // will be true if any gamestate players match playerId
+          return node.player.playerId === player.playerId
         })
       })
 
       // This should add any new gamestate players not in nodes
       this.gameState.players.forEach( (player, i) => {
         const alreadyInNodes = this.nodes.some( node => { // will be true if any nodes match playerId
-          console.log("npid", node.playerId, "pid", player.playerId)
-          return node.playerId === player.playerId
+          return node.player.playerId === player.playerId
         })
-
-        console.log(`${player.playerId} in nodes? ${alreadyInNodes}`)
 
         if (!alreadyInNodes) {
           this.addNode(player)
         }
       })
+
+      this.nodes.forEach( (node, i) => {
+        node.player = this.gameState.players.find( player => {
+          return node.player.playerId === player.playerId;
+        })
+      })
     },
     addNode(player) {
       this.nodes.push({
-        emoji: player.emoji,
-        x: Math.random() * this.width,
-        y: Math.random() * this.height,
+        x: this.width/2,
+        y: this.height* 0.6,
         color: d3.gray(50),
-        choiceIndex: player.choiceIndex,
-        playerId: player.playerId
+        player: player
       });
     },
     continueSimulation() {
@@ -109,13 +110,30 @@ export default {
         this.simulation.force(f.label, f.force)
       })
     },
+    // createChoiceSim() {
+    //   let distance = 100
+    //   this.choiceNodes = this.gameState.choices.map(choice, index => {
+
+    //   })
+
+    //   this.choiceSim = d3.forceSimulation(this.choiceNodes)
+    //     .force("distance", d3.forceCollide(distance))
+    //     .force("centerX", d3.forceX(this.width/2))
+    //     .force("centerY", d3.forceY(this.height/2))
+    //     .force("center", d3.forceCenter(this.width/2, this.height/2))
+
+    //   this.simulation.on("end", (e) => {
+    //     this.calculateZoneForces()
+    //   })
+    //   // this.force.initialize(this.nodes)
+    // },
     calculateZones() {
       // TODO better algorithm with vertical separation
       let xScale = d3.scaleLinear()
-        .domain([0, this.gameState.choices.length])
-        .range([this.width * 0.15, this.width * 1.6])
-      
-      let yScale = index => { return this.height * 0.5}
+        .domain([0, this.gameState.choices.length - 1])
+        .range([this.width * 0.15, this.width * 0.85])
+
+      let yScale = index => { return this.height * 0.3}
 
       this.zones = this.gameState.choices.map( (choice, index) => {
         return {
@@ -135,13 +153,13 @@ export default {
         choiceForces.push({
           label: `posX${index}`,
           force: d3.forceX(this.zones[index].x).strength( (node, i) => {
-            return node.choiceIndex === index ? 0.04 : 0;
+            return node.player.choiceIndex === index ? 0.04 : 0;
           })
         }) 
         choiceForces.push({
           label: `posY${index}`,
           force: d3.forceY(this.zones[index].y).strength( (node, i) => {
-            return node.choiceIndex === index ? 0.04 : 0;
+            return node.player.choiceIndex === index ? 0.04 : 0;
           })
         }) 
       })
@@ -152,7 +170,7 @@ export default {
       })
 
       let neutralForceStrength = (node, i) => {
-        return node.choiceIndex === -1 ? 0.06 : 0;
+        return node.player.choiceIndex === -1 ? 0.06 : 0;
       }
       choiceForces.push({
         label: 'neutralX',
@@ -162,6 +180,11 @@ export default {
         label: 'neutralY',
         force: d3.forceY(this.height * 0.85).strength(neutralForceStrength)
       })
+
+      // choiceForces.push({
+      //   label: "centering",
+      //   force: d3.forceCenter(this.width/2, this.height/2)
+      // })
 
       this.forces = choiceForces;
     },

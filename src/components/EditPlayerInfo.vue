@@ -18,13 +18,13 @@
         </div>
         <div class="field is-grouped is-grouped-right">
           <p class="control">
-            <a class="button is-primary is-large" @click="submit()">
-              Submit
+            <a class="button is-white is-large" @click="close()">
+              Cancel
             </a>
           </p>
           <p class="control">
-            <a class="button is-white is-large" @click="close()">
-              Cancel
+            <a class="button is-primary is-large" @click="submit()">
+              Submit
             </a>
           </p>
         </div>
