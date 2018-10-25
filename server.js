@@ -25,7 +25,6 @@ app.use("/api", api);
 app.use(serveStatic(__dirname + "/dist"));
 app.get("/*", function(req, res) {
   // FIX: This path might be incorrect for Vue-CLI 3
-  console.log("dirname", __dirname)
   res.sendFile(__dirname + "/dist/index.html");
 });
 
