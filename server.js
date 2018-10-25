@@ -28,6 +28,6 @@ app.get("/*", function(req, res) {
 });
 
 var port = process.env.PORT || 5000;
-http.listen(port);
+http.listen(port, "0.0.0.0");
 
 console.log("server started " + port);
