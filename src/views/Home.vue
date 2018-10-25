@@ -1,6 +1,8 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
+    <p>
+      Enter code to join!
+    </p>
     <br>
     <div class="columns is-centered is-mobile">
       <div class="column is-one-quarter-tablet is-two-thirds-mobile">

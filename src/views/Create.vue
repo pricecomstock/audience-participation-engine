@@ -10,7 +10,7 @@
 
       <div class="field is-grouped is-grouped-centered">
         <p class="control">
-          <a class="button is-large is-primary" @click="createRoom()">
+          <a class="button is-large is-primary" @click="createRoom()" @keydown.enter="createRoom()">
             CREATE
           </a>
         </p>
