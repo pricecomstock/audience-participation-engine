@@ -99,6 +99,16 @@ class RoomManager {
           console.log("disconnect", reason);
           socket.player.connected = false;
           // rooms are left automatically upon disconnection
+          sendRoomUpdates(socket.roomCode);
+        }
+      });
+      
+      socket.on("playerreconnect", reason => {
+        if (socket.player) {
+          console.log("reconnect", reason);
+          socket.player.connected = true;
+          // rooms are left automatically upon disconnection
+          sendRoomUpdates(socket.roomCode);
         }
       });
 

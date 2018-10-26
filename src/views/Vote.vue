@@ -99,6 +99,9 @@ export default {
       this.playerId = id;
       sessionStorage.setItem(this.id, this.playerId)
       console.log("Assigned ID", id);
+    },
+    reconnect: function(attempts) {
+      this.setPlayerActive();
     }
     // startVote: function(newChoices) {
     //   console.log("starting vote with choices", newChoices);
@@ -128,6 +131,9 @@ export default {
       if (!existingPlayerIdForRoom) {
         this.showEditPlayerInfo = true;
       }
+    },
+    setPlayerActive() {
+      this.$socket.emit("playerreconnect", "");
     }
   },
   mounted() {
