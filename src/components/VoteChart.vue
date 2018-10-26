@@ -18,12 +18,12 @@
         text-anchor="middle"
         :x="(width/gameState.choices.length) * index + (width/gameState.choices.length)/2"
         :y="height*0.77"
-        >{{ gameState.players.filter(player=>{return player.choiceIndex === index}).length }}</text>
+        >{{ gameState.players.filter(player=>{return player.choiceIndex === index && player.connected}).length }}</text>
     </g>
     <g v-for="(node, index) in nodes" :key="index">
       <!-- <circle :r="radius" :cx="node.x" :cy="node.y" :fill="node.color" fill-opacity="0" stroke="black" stroke-width="2px">
       </circle> -->
-      <text :style="emojiClasses" text-anchor="middle" :x="node.x" :y="node.y">{{node.player.emoji}}</text>
+      <text :class="{translucent: !node.player.connected}" :style="emojiClasses" text-anchor="middle" :x="node.x" :y="node.y">{{node.player.emoji}}</text>
     </g>
   </svg>
 </template>
@@ -233,6 +233,19 @@ export default {
           return node.player.choiceIndex === -1 ? 0.07 : 0;
         })
       })
+      
+      choiceForces.push({
+        label: 'dconX',
+        force: d3.forceX(this.width * 0.05).strength((node, i) => {
+          return node.player.connected ? 0 : 0.08;
+        })
+      })
+      choiceForces.push({
+        label: 'dconY',
+        force: d3.forceY(this.height * 0.9).strength((node, i) => {
+          return node.player.connected ? 0 : 0.08;
+        })
+      })
 
       // choiceForces.push({
       //   label: "centering",
@@ -293,6 +306,11 @@ export default {
 
 .vote-count {
   font-size: 2em;
+}
+
+.translucent {
+  opacity: 0.3;
+
 }
 
 </style>
