@@ -15,7 +15,7 @@
     
     <div class="buttons">
       <div 
-        :disabled="locked"
+        :disabled="locked || cooldown"
         v-for="(choice, index) in choices" 
         :key="index" 
         class="button is-large" 
@@ -64,7 +64,8 @@ export default {
         choiceIndex: -1
       },
       playerId: "",
-      showEditPlayerInfo: false
+      showEditPlayerInfo: false,
+      cooldown: false
     };
   },
   sockets: {
@@ -116,8 +117,9 @@ export default {
       //   room: this.id
       // };
       // console.table(voteInfo);
-      if (!this.locked) {
+      if (!this.locked && !this.cooldown) {
         this.$socket.emit("vote", choiceIndex);
+        this.startCooldown();
       }
     },
     joinRoom(roomCode) {
@@ -134,6 +136,13 @@ export default {
     },
     setPlayerActive() {
       this.$socket.emit("playerreconnect", "");
+    },
+    startCooldown() {
+      this.cooldown = true;
+      setTimeout(this.endCooldown, 1500)
+    },
+    endCooldown() {
+      this.cooldown = false;
     }
   },
   mounted() {

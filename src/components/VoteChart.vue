@@ -1,5 +1,11 @@
 <template>
   <svg :width="width" :height="height" @click="continueSimulation()">
+    <text
+      class="join-instructions"
+      text-anchor="end"
+      :x="width*0.99"
+      :y="height*0.95"
+      >{{`enter ${roomCode} at testkitchen.fun`}}</text>
     <g v-for="(choice, index) in gameState.choices" :key="`zone${index}`">
       <rect 
         :x="(width/gameState.choices.length) * index"
@@ -39,6 +45,9 @@ export default {
   name: 'vote-chart',
   props: {
     gameState: {
+      required: true
+    },
+    roomCode: {
       required: true
     }
   },
@@ -313,4 +322,7 @@ export default {
 
 }
 
+.join-instructions {
+  font-size: 1.2em;
+}
 </style>

@@ -2,7 +2,7 @@
     <div>
       <div class="columns is-centered">
         <div class="column is-full">
-          <vote-chart :gameState="gameState"></vote-chart>
+          <vote-chart :roomCode="id" :gameState="gameState"></vote-chart>
         </div>
       </div>
       <div class="columns is-centered">
