@@ -147,13 +147,15 @@ export default {
     gameState() {
       return {
         choices: this.choices,
-        players: this.players
+        players: this.players,
+        locked: this.locked
       }
     },
     dummyGameState() {
       let dummyState = {
         choices: this.choices.slice(0),
-        players: this.dummyPlayers.slice(0).concat(this.players)
+        players: this.dummyPlayers.slice(0).concat(this.players),
+        locked: this.locked
       }
 
       return dummyState

@@ -6,6 +6,14 @@
       :x="width*0.99"
       :y="height*0.95"
       >{{`enter ${roomCode} at testkitchen.fun`}}</text>
+    <text
+      v-if="gameState.locked"
+      class="lock-notice"
+      text-anchor="middle"
+      :x="width*0.5"
+      :y="height*0.83"
+      fill="red"
+      >LOCKED</text>
     <g v-for="(choice, index) in gameState.choices" :key="`zone${index}`">
       <rect 
         :x="(width/gameState.choices.length) * index"
@@ -324,5 +332,9 @@ export default {
 
 .join-instructions {
   font-size: 1.2em;
+}
+
+.lock-notice {
+  font-size: 4em;
 }
 </style>
