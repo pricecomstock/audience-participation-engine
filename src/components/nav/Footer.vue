@@ -104,4 +104,10 @@ html {
   right: 0px;
   bottom: 0px;
 }
+
+@media only screen and (max-width: 767px) {
+  .section.pcfooter {
+    position: static;
+  }
+}
 </style>
