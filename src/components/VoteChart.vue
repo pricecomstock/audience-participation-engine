@@ -43,14 +43,14 @@
 </template>
 
 <script>
-import * as d3 from 'd3'
-import * as d3moji from 'd3moji'
+import * as d3 from "d3";
+import * as d3moji from "d3moji";
 // d3moji(d3)
 // import d3Force from 'd3-force'
 // import d3Quadtree from 'd3-quadtree'
 
 export default {
-  name: 'vote-chart',
+  name: "vote-chart",
   props: {
     gameState: {
       required: true
@@ -65,16 +65,16 @@ export default {
       height: 500,
       nodes: null,
       root: null,
-      line: '',
+      line: "",
       simulation: null,
       // choiceNodes: null,
       // choiceSim: null,
-      zones: [{x:0, y:0}],
-      forces: [{label: 'posX0', force: d3.forceX(0)}],
+      zones: [{ x: 0, y: 0 }],
+      forces: [{ label: "posX0", force: d3.forceX(0) }],
       maxZonesHad: 0,
       colors: d3.scaleOrdinal(d3.schemePastel2),
       edgeBuffer: 10
-    }
+    };
   },
   computed: {
     // FIXME gave up on this because it wasn't strictly necessary and was taking a while
@@ -98,9 +98,9 @@ export default {
     },
     emojiClasses() {
       return {
-        'font-size': `${this.emojiFontSizeForRadius(this.radius)}em`,
-        'transform': `translateY(${this.emojiOffsetForRadius(this.radius)}em)`
-      }
+        "font-size": `${this.emojiFontSizeForRadius(this.radius)}em`,
+        transform: `translateY(${this.emojiOffsetForRadius(this.radius)}em)`
+      };
     }
   },
   methods: {
@@ -112,43 +112,46 @@ export default {
      * the specified array.
      */
     createNodes() {
-      this.nodes = this.gameState.players.map( (player, i) => {
+      this.nodes = this.gameState.players.map((player, i) => {
         return {
           x: Math.random() * this.width,
           y: Math.random() * this.height,
-          color: d3.gray(i*2),
-          player: player                                    
-        }
-      })
+          color: d3.gray(i * 2),
+          player: player
+        };
+      });
     },
     syncNodes() {
-      this.nodes = this.nodes.filter( (node, i) => { // remove players that have left
-        return this.gameState.players.some( player => { // will be true if any gamestate players match playerId
-          return node.player.playerId === player.playerId
-        })
-      })
+      this.nodes = this.nodes.filter((node, i) => {
+        // remove players that have left
+        return this.gameState.players.some(player => {
+          // will be true if any gamestate players match playerId
+          return node.player.playerId === player.playerId;
+        });
+      });
 
       // This should add any new gamestate players not in nodes
-      this.gameState.players.forEach( (player, i) => {
-        const alreadyInNodes = this.nodes.some( node => { // will be true if any nodes match playerId
-          return node.player.playerId === player.playerId
-        })
+      this.gameState.players.forEach((player, i) => {
+        const alreadyInNodes = this.nodes.some(node => {
+          // will be true if any nodes match playerId
+          return node.player.playerId === player.playerId;
+        });
 
         if (!alreadyInNodes) {
-          this.addNode(player)
+          this.addNode(player);
         }
-      })
+      });
 
-      this.nodes.forEach( (node, i) => {
-        node.player = this.gameState.players.find( player => {
+      this.nodes.forEach((node, i) => {
+        node.player = this.gameState.players.find(player => {
           return node.player.playerId === player.playerId;
-        })
-      })
+        });
+      });
     },
     addNode(player) {
       this.nodes.push({
-        x: this.width/2,
-        y: this.height* 0.6,
+        x: this.width / 2,
+        y: this.height * 0.6,
         color: d3.gray(50),
         player: player
       });
@@ -162,15 +165,15 @@ export default {
       this.simulation = d3.forceSimulation(this.nodes);
       this.updateSimulationForces();
 
-      this.simulation.on("tick", (tickEvt) => {
+      this.simulation.on("tick", tickEvt => {
         this.$forceUpdate();
-      })
+      });
       // this.force.initialize(this.nodes)
     },
     updateSimulationForces() {
-      this.forces.forEach( f => {
-        this.simulation.force(f.label, f.force)
-      })
+      this.forces.forEach(f => {
+        this.simulation.force(f.label, f.force);
+      });
     },
     // createChoiceSim() {
     //   let distance = 100
@@ -191,78 +194,81 @@ export default {
     // },
     calculateZones() {
       let numChoices = this.gameState.choices.length;
-      let bufferZone = this.width * 0.5 / numChoices;
+      let bufferZone = (this.width * 0.5) / numChoices;
       // TODO better algorithm with vertical separation
-      let xScale = d3.scaleLinear()
+      let xScale = d3
+        .scaleLinear()
         .domain([0, numChoices - 1])
-        .range([bufferZone, this.width - bufferZone])
+        .range([bufferZone, this.width - bufferZone]);
 
-      let yScale = index => { return this.height * 0.3}
+      let yScale = index => {
+        return this.height * 0.3;
+      };
 
-      this.zones = this.gameState.choices.map( (choice, index) => {
+      this.zones = this.gameState.choices.map((choice, index) => {
         return {
           x: xScale(index),
           y: yScale(index)
-        }
-      })
+        };
+      });
 
       if (this.zones.length > this.maxZonesHad) {
-        this.maxZonesHad = this.zones.length
+        this.maxZonesHad = this.zones.length;
       }
     },
     calculateZoneForces() {
-      let choiceForces = []
+      let choiceForces = [];
       // TODO: use force.initialize instead of force.strength to select nodes
-      this.gameState.choices.forEach( (choice, index) => {
+      this.gameState.choices.forEach((choice, index) => {
         choiceForces.push({
           label: `posX${index}`,
-          force: d3.forceX(this.zones[index].x).strength( (node, i) => {
+          force: d3.forceX(this.zones[index].x).strength((node, i) => {
             return node.player.choiceIndex === index ? 0.08 : 0;
           })
-        }) 
+        });
         choiceForces.push({
           label: `posY${index}`,
-          force: d3.forceY(this.zones[index].y).strength( (node, i) => {
+          force: d3.forceY(this.zones[index].y).strength((node, i) => {
             return node.player.choiceIndex === index ? 0.03 : 0;
           })
-        }) 
-      })
-      
+        });
+      });
+
       choiceForces.push({
-        label: 'collide',
+        label: "collide",
         force: d3.forceCollide(this.radius + this.buffer)
-      })
-      
+      });
+
       // choiceForces.push({
       //   label: 'boundary',
       //   force: (alpha) => {}
       // })
 
       choiceForces.push({
-        label: 'neutralX',
-        force: d3.forceX(this.width/2).strength((node, i) => {
+        label: "neutralX",
+        force: d3.forceX(this.width / 2).strength((node, i) => {
           return node.player.choiceIndex === -1 ? 0.02 : 0;
         })
-      })
+      });
       choiceForces.push({
-        label: 'neutralY',
+        label: "neutralY",
         force: d3.forceY(this.height * 0.9).strength((node, i) => {
           return node.player.choiceIndex === -1 ? 0.07 : 0;
         })
-      })
-      
+      });
+
       choiceForces.push({
-        label: 'dconX',
+        label: "dconX",
         force: d3.forceX(this.width * 0.05).strength((node, i) => {
           return node.player.connected ? 0 : 0.08;
         })
-      })
+      });
       choiceForces.push({
-        label: 'dconY',
+        label: "dconY",
         force: d3.forceY(this.height * 0.9).strength((node, i) => {
           return node.player.connected ? 0 : 0.08;
         })
-      })
+      });
 
       // choiceForces.push({
       //   label: "centering",
@@ -272,18 +278,27 @@ export default {
       this.forces = choiceForces;
     },
     removeZoneForces() {
-      d3.range(this.maxZonesHad).forEach( zoneIndex => {
-        this.simulation.force(`posX${zoneIndex}`, null)
-        this.simulation.force(`posY${zoneIndex}`, null)
-      })
+      d3.range(this.maxZonesHad).forEach(zoneIndex => {
+        this.simulation.force(`posX${zoneIndex}`, null);
+        this.simulation.force(`posY${zoneIndex}`, null);
+      });
     },
-    radiusForPlayers: d3.scaleLinear().domain([0,50]).range([30, 20]),
-    emojiFontSizeForRadius: d3.scaleLinear().domain([20,30]).range([1.8, 2.8]),
-    emojiOffsetForRadius: d3.scaleLinear().domain([20,30]).range([0.4, 0.31])
+    radiusForPlayers: d3
+      .scaleLinear()
+      .domain([0, 50])
+      .range([30, 20]),
+    emojiFontSizeForRadius: d3
+      .scaleLinear()
+      .domain([20, 30])
+      .range([1.8, 2.8]),
+    emojiOffsetForRadius: d3
+      .scaleLinear()
+      .domain([20, 30])
+      .range([0.4, 0.31])
   },
   mounted() {
     this.createNodes();
-    this.createSimulation()
+    this.createSimulation();
     this.calculateZones();
     this.calculateZoneForces();
     this.updateSimulationForces();
@@ -298,7 +313,7 @@ export default {
       this.continueSimulation();
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -327,7 +342,6 @@ export default {
 
 .translucent {
   opacity: 0.3;
-
 }
 
 .join-instructions {

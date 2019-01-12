@@ -35,15 +35,15 @@
 </template>
 
 <script>
-import EmojiInput from '@/components/EmojiInput.vue';
+import EmojiInput from "@/components/EmojiInput.vue";
 
 export default {
-  props: ['previousEmoji', 'previousNickname', 'isOpen'],
+  props: ["previousEmoji", "previousNickname", "isOpen"],
   data() {
     return {
-      nickname: '',
-      emoji: ''
-    }
+      nickname: "",
+      emoji: ""
+    };
   },
   methods: {
     close() {
@@ -69,9 +69,8 @@ export default {
       this.emoji = this.previousEmoji;
     }
   }
-}
+};
 </script>
 
 <style>
-
 </style>

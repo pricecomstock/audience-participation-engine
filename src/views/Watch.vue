@@ -66,10 +66,10 @@
 </template>
 
 <script>
-import VoteChart from '@/components/VoteChart.vue'
+import VoteChart from "@/components/VoteChart.vue";
 
 export default {
-  name: 'watch',
+  name: "watch",
   props: {
     id: {
       required: true
@@ -80,7 +80,7 @@ export default {
       players: [],
       voteValues: [],
       choices: [],
-      newChoices: '',
+      newChoices: "",
       debug: false,
       dummyPlayers: [],
       locked: false
@@ -95,16 +95,18 @@ export default {
       // the votes come in the form of indices
       // have to remap them to actual choices
       this.choices = newState.choices;
-      this.players = newState.players.map( (player) => {
+      this.players = newState.players.map(player => {
         player.choiceValue = "";
         if (player.choiceIndex !== -1) {
-          player.choiceValue = this.choices[player.choiceIndex]
+          player.choiceValue = this.choices[player.choiceIndex];
         }
         return player;
-      })
+      });
       this.locked = newState.locked;
 
-      this.voteValues = this.players.map(player => {return this.choices[player.choiceIndex]});
+      this.voteValues = this.players.map(player => {
+        return this.choices[player.choiceIndex];
+      });
     }
   },
   methods: {
@@ -116,49 +118,51 @@ export default {
     },
     submitNewChoices() {
       //TODO Add admin key
-      this.$socket.emit("newchoices", this.newChoicesList)
+      this.$socket.emit("newchoices", this.newChoicesList);
     },
     resetVotes() {
-      this.$socket.emit("resetvotes", "")
+      this.$socket.emit("resetvotes", "");
     },
     lockVotes() {
-      this.$socket.emit("lockvotes", true)
+      this.$socket.emit("lockvotes", true);
     },
     unlockVotes() {
-      this.$socket.emit("lockvotes", false)
+      this.$socket.emit("lockvotes", false);
     },
     addDummyPlayer() {
       this.dummyPlayers.push({
-        emoji: '👻',
+        emoji: "👻",
         playerId: `xyz${Math.random()}`,
-        nickname: 'ghost',
+        nickname: "ghost",
         choiceIndex: Math.floor(Math.random() * (this.choices.length + 1) - 1),
-        choiceValue: "",
-      })
+        choiceValue: ""
+      });
     },
     removeDummyPlayer() {
-      this.dummyPlayers.shift()
+      this.dummyPlayers.shift();
     }
   },
   computed: {
     newChoicesList() {
-      return this.newChoices.split('\n').map( choice => {return choice.trim()});
+      return this.newChoices.split("\n").map(choice => {
+        return choice.trim();
+      });
     },
     gameState() {
       return {
         choices: this.choices,
         players: this.players,
         locked: this.locked
-      }
+      };
     },
     dummyGameState() {
       let dummyState = {
         choices: this.choices.slice(0),
         players: this.dummyPlayers.slice(0).concat(this.players),
         locked: this.locked
-      }
+      };
 
-      return dummyState
+      return dummyState;
     }
   },
   mounted() {

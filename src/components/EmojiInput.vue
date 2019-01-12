@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import 'string.prototype.at'
+import "string.prototype.at";
 export default {
   props: {
     value: {
@@ -18,10 +18,12 @@ export default {
   },
   computed: {
     emojiModel: {
-      get() {return this.value},
+      get() {
+        return this.value;
+      },
       set(v) {
         // console.log(v.at(0))
-        this.$emit("input", v.at(0))
+        this.$emit("input", v.at(0));
       }
     }
   },
@@ -30,7 +32,7 @@ export default {
     //   this.$emit("input", v.charAt(0))
     // }
   }
-}
+};
 </script>
 
 <style>

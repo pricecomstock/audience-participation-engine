@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import EditPlayerInfo from '@/components/EditPlayerInfo.vue';
+import EditPlayerInfo from "@/components/EditPlayerInfo.vue";
 
 export default {
   name: "vote",
@@ -73,32 +73,34 @@ export default {
       console.log("socket connected");
     },
     disconnect: function(reason) {
-      console.log("disconnected", reason)
+      console.log("disconnected", reason);
     },
     state: function(newState) {
       console.log("received results from server", newState);
       // the votes come in the form of indices
       // have to remap them to actual choices
       this.choices = newState.choices;
-      this.players = newState.players.map( (player) => {
+      this.players = newState.players.map(player => {
         player.choiceValue = "";
         if (player.choiceIndex !== -1) {
-          player.choiceValue = this.choices[player.choiceIndex]
+          player.choiceValue = this.choices[player.choiceIndex];
         }
         return player;
-      })
+      });
 
       this.locked = newState.locked;
 
-      this.localPlayer = this.players.find( player => {
+      this.localPlayer = this.players.find(player => {
         return player.playerId === this.playerId;
-      })
+      });
 
-      this.voteValues = this.players.map(player => {return this.choices[player.choiceIndex]});
+      this.voteValues = this.players.map(player => {
+        return this.choices[player.choiceIndex];
+      });
     },
     playerIdAssigned: function(id) {
       this.playerId = id;
-      sessionStorage.setItem(this.id, this.playerId)
+      sessionStorage.setItem(this.id, this.playerId);
       console.log("Assigned ID", id);
     },
     reconnect: function(attempts) {
@@ -124,7 +126,7 @@ export default {
     },
     joinRoom(roomCode) {
       let existingPlayerIdForRoom = sessionStorage.getItem(roomCode);
-      console.log("existing id", existingPlayerIdForRoom)
+      console.log("existing id", existingPlayerIdForRoom);
       this.$socket.emit("room", {
         roomCode: roomCode,
         requestedId: existingPlayerIdForRoom
@@ -139,7 +141,7 @@ export default {
     },
     startCooldown() {
       this.cooldown = true;
-      setTimeout(this.endCooldown, 1500)
+      setTimeout(this.endCooldown, 1500);
     },
     endCooldown() {
       this.cooldown = false;

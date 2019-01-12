@@ -30,13 +30,17 @@ function createRouter(io) {
   router.post("/createroom", function(req, res) {
     const newRoomInfo = roomManager.createNewRoom({ name: req.body.name });
     console.log("Created", newRoomInfo.roomCode);
-    res.json({ success: true, code: newRoomInfo.roomCode, adminKey: newRoomInfo.adminKey });
+    res.json({
+      success: true,
+      code: newRoomInfo.roomCode,
+      adminKey: newRoomInfo.adminKey
+    });
   });
-  
+
   router.post("/checkroom", function(req, res) {
     let code = req.body.code.toUpperCase();
-    console.debug('Checking existence of:', code)
-    let success = roomManager.checkRoomExists(code)
+    console.debug("Checking existence of:", code);
+    let success = roomManager.checkRoomExists(code);
     res.json({
       success: success,
       code: code

@@ -31,8 +31,8 @@ export default {
   name: "home",
   data() {
     return {
-      code: ''
-    }
+      code: ""
+    };
   },
   methods: {
     joinRoom() {
@@ -42,11 +42,11 @@ export default {
           code: this.code
         })
         .then(response => {
-          console.log(response)
+          console.log(response);
           if (response.data.success === true) {
             this.$router.push(`/vote/${response.data.code}`);
           }
-      });
+        });
     }
   },
   mounted() {
