@@ -44,10 +44,6 @@
 
 <script>
 import * as d3 from "d3";
-import * as d3moji from "d3moji";
-// d3moji(d3)
-// import d3Force from 'd3-force'
-// import d3Quadtree from 'd3-quadtree'
 
 export default {
   name: "vote-chart",
@@ -122,7 +118,7 @@ export default {
       });
     },
     syncNodes() {
-      this.nodes = this.nodes.filter((node, i) => {
+      this.nodes = this.nodes.filter(node => {
         // remove players that have left
         return this.gameState.players.some(player => {
           // will be true if any gamestate players match playerId
@@ -131,7 +127,7 @@ export default {
       });
 
       // This should add any new gamestate players not in nodes
-      this.gameState.players.forEach((player, i) => {
+      this.gameState.players.forEach(player => {
         const alreadyInNodes = this.nodes.some(node => {
           // will be true if any nodes match playerId
           return node.player.playerId === player.playerId;
@@ -142,7 +138,7 @@ export default {
         }
       });
 
-      this.nodes.forEach((node, i) => {
+      this.nodes.forEach(node => {
         node.player = this.gameState.players.find(player => {
           return node.player.playerId === player.playerId;
         });
@@ -165,7 +161,7 @@ export default {
       this.simulation = d3.forceSimulation(this.nodes);
       this.updateSimulationForces();
 
-      this.simulation.on("tick", tickEvt => {
+      this.simulation.on("tick", _tickEvt => {
         this.$forceUpdate();
       });
       // this.force.initialize(this.nodes)
@@ -201,7 +197,7 @@ export default {
         .domain([0, numChoices - 1])
         .range([bufferZone, this.width - bufferZone]);
 
-      let yScale = index => {
+      let yScale = _index => {
         return this.height * 0.3;
       };
 
@@ -222,13 +218,13 @@ export default {
       this.gameState.choices.forEach((choice, index) => {
         choiceForces.push({
           label: `posX${index}`,
-          force: d3.forceX(this.zones[index].x).strength((node, i) => {
+          force: d3.forceX(this.zones[index].x).strength((node, _i) => {
             return node.player.choiceIndex === index ? 0.08 : 0;
           })
         });
         choiceForces.push({
           label: `posY${index}`,
-          force: d3.forceY(this.zones[index].y).strength((node, i) => {
+          force: d3.forceY(this.zones[index].y).strength((node, _i) => {
             return node.player.choiceIndex === index ? 0.03 : 0;
           })
         });
@@ -246,26 +242,26 @@ export default {
 
       choiceForces.push({
         label: "neutralX",
-        force: d3.forceX(this.width / 2).strength((node, i) => {
+        force: d3.forceX(this.width / 2).strength((node, _i) => {
           return node.player.choiceIndex === -1 ? 0.02 : 0;
         })
       });
       choiceForces.push({
         label: "neutralY",
-        force: d3.forceY(this.height * 0.9).strength((node, i) => {
+        force: d3.forceY(this.height * 0.9).strength((node, _i) => {
           return node.player.choiceIndex === -1 ? 0.07 : 0;
         })
       });
 
       choiceForces.push({
         label: "dconX",
-        force: d3.forceX(this.width * 0.05).strength((node, i) => {
+        force: d3.forceX(this.width * 0.05).strength((node, _i) => {
           return node.player.connected ? 0 : 0.08;
         })
       });
       choiceForces.push({
         label: "dconY",
-        force: d3.forceY(this.height * 0.9).strength((node, i) => {
+        force: d3.forceY(this.height * 0.9).strength((node, _i) => {
           return node.player.connected ? 0 : 0.08;
         })
       });

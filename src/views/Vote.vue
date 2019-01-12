@@ -100,10 +100,10 @@ export default {
     },
     playerIdAssigned: function(id) {
       this.playerId = id;
-      sessionStorage.setItem(this.id, this.playerId);
+      localStorage.setItem(this.id, this.playerId);
       console.log("Assigned ID", id);
     },
-    reconnect: function(attempts) {
+    reconnect: function(_attempts) {
       this.setPlayerActive();
     }
     // startVote: function(newChoices) {
@@ -125,7 +125,7 @@ export default {
       }
     },
     joinRoom(roomCode) {
-      let existingPlayerIdForRoom = sessionStorage.getItem(roomCode);
+      let existingPlayerIdForRoom = localStorage.getItem(roomCode);
       console.log("existing id", existingPlayerIdForRoom);
       this.$socket.emit("room", {
         roomCode: roomCode,
