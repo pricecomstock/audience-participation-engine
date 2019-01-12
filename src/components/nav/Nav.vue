@@ -46,12 +46,13 @@
 </template>
 
 <script>
+import details from "@/details.js";
 export default {
   name: "NavBar",
   data() {
     return {
       showNav: false,
-      appName: process.env.VUE_APP_TITLE
+      appName: details.appTitle
     };
   },
   computed: {
