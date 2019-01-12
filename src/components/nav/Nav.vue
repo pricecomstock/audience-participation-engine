@@ -40,8 +40,8 @@
           </div>
         </div>
         <router-link v-else class="navbar-item" to="/">Submit</router-link>
-      </div> -->
-    </div>
+      </div>
+    </div>-->
   </nav>
 </template>
 

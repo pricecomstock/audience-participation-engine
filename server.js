@@ -4,16 +4,15 @@ var io = require("socket.io")(http);
 var createRouter = require("./router.js").createRouter;
 var serveStatic = require("serve-static");
 
-// FIX: figure out actual CORS rules
 // This is for development mostly
-// app.use(function(req, res, next) {
-//   res.header("Access-Control-Allow-Origin", process.env.VUE_APP_BACKEND_URL);
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-//   );
-//   next();
-// });
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", '*');
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  next();
+});
 
 api = createRouter(io);
 

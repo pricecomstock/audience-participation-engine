@@ -9,7 +9,7 @@ import io from "socket.io-client";
 import VueSocketio from "vue-socket.io";
 
 // export const SocketInstance = socketio('http://localhost:5000')
-Vue.use(VueSocketio, io());
+Vue.use(VueSocketio, io(process.env.VUE_APP_BACKEND_URL));
 // Vue.use(VueSocketio, SocketInstance);
 
 Vue.config.productionTip = false;
