@@ -1,5 +1,5 @@
 <template>
-  <svg :width="width" :height="height" @click="continueSimulation()">
+  <svg :viewBox="`0 0 ${width} ${height}`" width="100%" @click="continueSimulation()">
     <text
       class="join-instructions"
       text-anchor="end"
@@ -57,8 +57,8 @@ export default {
   },
   data() {
     return {
-      width: 1100,
-      height: 500,
+      width: 1920,
+      height: 1080,
       nodes: null,
       root: null,
       line: "",

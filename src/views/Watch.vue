@@ -1,8 +1,19 @@
 <template>
     <div>
       <div class="columns is-centered">
-        <div class="column is-full">
-          <vote-chart :roomCode="id" :gameState="gameState"></vote-chart>
+        <div class="column is-11">
+          <button class="button is-outlined is-primary" @click="fullScreenElementWithId('vote-chart-container')">
+            <span class="icon is-medium">
+              <i class="fas fa-expand"></i>
+            </span>
+            <span>Fullscreen</span>
+          </button>
+          <br>
+          <div class="section">
+            <div id="vote-chart-container">
+              <vote-chart :roomCode="id" :gameState="gameState"></vote-chart>
+            </div>
+          </div>
         </div>
       </div>
       <div class="columns is-centered">
@@ -140,6 +151,22 @@ export default {
     },
     removeDummyPlayer() {
       this.dummyPlayers.shift();
+    },
+    fullScreenElementWithId(id) {
+      var elem = document.getElementById(id);
+      elem.focus();
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.mozRequestFullScreen) {
+        /* Firefox */
+        elem.mozRequestFullScreen();
+      } else if (elem.webkitRequestFullscreen) {
+        /* Chrome, Safari and Opera */
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) {
+        /* IE/Edge */
+        elem.msRequestFullscreen();
+      }
     }
   },
   computed: {
