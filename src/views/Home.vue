@@ -63,8 +63,7 @@ export default {
           }
         })
         .catch(_error => {
-          this.errorMessage =
-            "Something went wrong with the networking. This is bad!";
+          this.errorMessage = _error;
           this.showError = true;
         });
     }
