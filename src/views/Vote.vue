@@ -27,7 +27,7 @@
         :key="index"
         class="button is-large"
         :class="{
-          'is-fullwidth': choices.length < 5,
+          'is-fullwidth': choices.length <= 3,
           'is-primary': index === localPlayer.choiceIndex
         }"
         @click="vote(index)"
