@@ -7,17 +7,17 @@
         </span>
         <span>{{ appName }}</span>
       </router-link>
-      <div
+      <!--wow these are the 3 bars of the hamburger icon-->
+      <!-- <div
         class="navbar-burger"
         :class="{ 'is-active': showNav }"
         @click="showNav = !showNav"
         data-target="navMenu"
       >
         <span></span>
-        <!--wow these are the 3 bars of the hamburger icon-->
         <span></span>
         <span></span>
-      </div>
+      </div> -->
     </div>
     <!-- <div class="navbar-menu" :class="{'is-active':showNav}" id="navMenu">
       <div class="navbar-start">
