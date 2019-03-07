@@ -1,20 +1,34 @@
 <template>
   <div class="container">
-    <div class="tags has-addons">
-      <span
-        class="tag is-large has-text-small"
-        @click="showEditPlayerInfo = !showEditPlayerInfo"
-      >
-        <span class="icon is-large">
-          <i class="fas fa-edit"></i>
-        </span>
-      </span>
-      <span class="tag is-dark is-large is-rounded">{{
-        localPlayer.nickname
-      }}</span>
-      <span class="tag is-light is-large is-rounded">{{
-        localPlayer.emoji
-      }}</span>
+    <div class="level is-mobile">
+      <div class="level-left">
+        <div class="tags has-addons">
+          <span
+            class="tag is-large has-text-small"
+            @click="showEditPlayerInfo = !showEditPlayerInfo"
+          >
+            <span class="icon is-large">
+              <i class="fas fa-edit"></i>
+            </span>
+          </span>
+          <span class="tag is-dark is-large is-rounded">{{
+            localPlayer.nickname
+          }}</span>
+          <span class="tag is-light is-large is-rounded">{{
+            localPlayer.emoji
+          }}</span>
+        </div>
+      </div>
+      <div class="level-right">
+        <button
+          v-if="isDisconnected"
+          class="button is-medium"
+          @click="connectToThisRoom()"
+        >
+          <span class="icon"><i class="fas fa-redo-alt"></i></span>
+        </button>
+        <span class="tag is-large is-danger" v-if="showFlag">FLAG</span>
+      </div>
     </div>
     <!-- <div>
       <span class="tag is-small is-warning">id: {{ playerId }}</span>
@@ -22,7 +36,7 @@
 
     <div class="buttons">
       <div
-        :disabled="locked || cooldown"
+        :disabled="locked || cooldown || index === localPlayer.choiceIndex"
         v-for="(choice, index) in choices"
         :key="index"
         class="button is-large"
@@ -59,6 +73,22 @@
 <script>
 import EditPlayerInfo from "@/components/EditPlayerInfo.vue";
 
+function registerMissedHeartbeatFunction(fn) {
+  var lastIntervalTime = new Date().getTime();
+  const heartbeatIntervalMs = 1000;
+  function heartbeat() {
+    let now = new Date().getTime();
+    let diff = now - lastIntervalTime;
+    lastIntervalTime = now;
+    // console.log(diff);
+    if (diff > heartbeatIntervalMs + 150) {
+      console.log("Heartbeat missed, calling registered function");
+      fn();
+    }
+  }
+  setInterval(heartbeat, heartbeatIntervalMs);
+}
+
 export default {
   name: "vote",
   props: {
@@ -79,7 +109,11 @@ export default {
       },
       playerId: "",
       showEditPlayerInfo: false,
-      cooldown: false
+      cooldown: false,
+      heartbeatIntervalMs: 1000,
+      heartbeatIntervalId: 0,
+      lastIntervalTime: 0,
+      showFlag: false
     };
   },
   sockets: {
@@ -127,13 +161,11 @@ export default {
   },
   methods: {
     vote(choiceIndex) {
-      // let voteInfo = {
-      //   choiceIndex: choiceIndex,
-      //   playerName: this.playerName,
-      //   room: this.id
-      // };
-      // console.table(voteInfo);
-      if (!this.locked && !this.cooldown) {
+      if (
+        !this.locked &&
+        !this.cooldown &&
+        choiceIndex !== this.localPlayer.choiceIndex
+      ) {
         this.$socket.emit("vote", choiceIndex);
         this.startCooldown();
       }
@@ -159,10 +191,23 @@ export default {
     },
     endCooldown() {
       this.cooldown = false;
+    },
+    connectToThisRoom() {
+      this.joinRoom(this.id);
+    },
+    disconnect() {
+      this.$socket.close();
+    }
+  },
+  computed: {
+    isDisconnected() {
+      return this.$socket.disconnected;
     }
   },
   mounted() {
-    this.joinRoom(this.id);
+    this.connectToThisRoom();
+    registerMissedHeartbeatFunction(this.connectToThisRoom);
+    // window.addEventListener("blur", this.handlePhoneAsleep.bind(context, true));
   },
   components: {
     editPlayerInfo: EditPlayerInfo
