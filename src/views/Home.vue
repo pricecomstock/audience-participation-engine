@@ -3,12 +3,18 @@
     <p>
       Enter code to join!
     </p>
-    <br>
+    <br />
     <div class="columns is-centered is-mobile">
       <div class="column is-one-quarter-tablet is-two-thirds-mobile">
         <div class="field has-addons is-expanded">
           <div class="control is-expanded">
-            <input class="input is-large is-uppercase" type="text" placeholder="Code" v-model.trim="code" @keydown.enter="joinRoom()">
+            <input
+              class="input is-large is-uppercase"
+              type="text"
+              placeholder="Code"
+              v-model.trim="code"
+              @keydown.enter="joinRoom()"
+            />
           </div>
           <div class="control">
             <a class="button is-primary is-large" @click="joinRoom()">
@@ -16,10 +22,15 @@
             </a>
           </div>
         </div>
-        <router-link to="create" class="button is-white" tag="a">CREATE</router-link>
+        <p class="help is-danger" :class="{ 'is-invisible': !showError }">
+          {{ errorMessage }}
+        </p>
+        <router-link to="create" class="button is-white" tag="a"
+          >CREATE</router-link
+        >
       </div>
     </div>
-    <br>
+    <br />
   </div>
 </template>
 
@@ -31,12 +42,13 @@ export default {
   name: "home",
   data() {
     return {
-      code: ""
+      code: "",
+      showError: false,
+      errorMessage: ""
     };
   },
   methods: {
     joinRoom() {
-      // TODO: Move this to another file
       axios
         .post("/checkroom", {
           code: this.code
@@ -45,7 +57,15 @@ export default {
           console.log(response);
           if (response.data.success === true) {
             this.$router.push(`/vote/${response.data.code}`);
+          } else {
+            this.errorMessage = "Room not found!";
+            this.showError = true;
           }
+        })
+        .catch(_error => {
+          this.errorMessage =
+            "Something went wrong with the networking. This is bad!";
+          this.showError = true;
         });
     }
   },
@@ -55,3 +75,7 @@ export default {
   }
 };
 </script>
+
+<style>
+/* invisible */
+</style>
