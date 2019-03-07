@@ -21,7 +21,10 @@
     </div>
     <div class="columns is-centered">
       <div class="column is-half">
-        <span class="tag is-warning is-large">{{ id }}</span>
+        <div class="tags are-large has-addons">
+          <span class="tag is-light is-rounded">Room Code</span>
+          <span class="tag is-primary is-rounded">{{ id }}</span>
+        </div>
         <div class="box" v-if="debug">
           <div class="button" @click="addDummyPlayer()">Add Dummy Player</div>
           <div class="button" @click="removeDummyPlayer()">

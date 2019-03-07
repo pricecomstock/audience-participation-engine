@@ -99,24 +99,21 @@ export default {
       zones: [{ x: 0, y: 0 }],
       forces: [{ label: "posX0", force: d3.forceX(0) }],
       maxZonesHad: 0,
-      colors: d3.scaleOrdinal(d3.schemePastel2),
+      // colors: d3.scaleOrdinal(d3.schemeSet3),
+      colors: d3.scaleOrdinal([
+        "#A7CAEE",
+        "#FF9BB4",
+        "#CEE498",
+        "#FBCAB3",
+        "#C9C2FF",
+        "#A7FBBA",
+        "#B8FFF8",
+        "#ECBCC4"
+      ]),
       edgeBuffer: 10
     };
   },
   computed: {
-    // FIXME gave up on this because it wasn't strictly necessary and was taking a while
-    // voteCounts() {
-    //   console.log("votecounts")
-    //   let choiceIndices = gameState.players.map((player)=>{return player.choiceIndex})
-    //   console.log(choiceIndices)
-    //   choiceCounts = new Array(this.gameState.choices.length).fill(0)
-    //   choiceIndices.forEach(choiceIndex => {
-    //     choiceCounts[choiceIndex] += 1;
-    //   })
-    //   console.log(choiceCounts)
-
-    //   return choiceCounts
-    // },
     radius() {
       return this.radiusForPlayers(this.nodes.length);
     },
@@ -131,7 +128,6 @@ export default {
     }
   },
   methods: {
-    // TODO You will need to call simulation.nodes when adding or removing nodes from simulation
     /**
      * If the specified array of nodes is modified, such as when nodes are added to or removed from
      * the simulation, this method must be called again with the new (or changed) array to notify the
@@ -192,6 +188,10 @@ export default {
       this.simulation = d3.forceSimulation(this.nodes);
       this.updateSimulationForces();
 
+      // default decay uses 1/300 as the power
+      // this.simulation.alphaDecay(1 - Math.pow(0.001, (1/500)));
+      this.simulation.velocityDecay(0.33);
+
       this.simulation.on("tick", _tickEvt => {
         this.$forceUpdate();
       });
@@ -250,7 +250,7 @@ export default {
         choiceForces.push({
           label: `posX${index}`,
           force: d3.forceX(this.zones[index].x).strength((node, _i) => {
-            return node.player.choiceIndex === index ? 0.08 : 0;
+            return node.player.choiceIndex === index ? 0.065 : 0;
           })
         });
         choiceForces.push({
@@ -279,20 +279,20 @@ export default {
       });
       choiceForces.push({
         label: "neutralY",
-        force: d3.forceY(this.height * 0.9).strength((node, _i) => {
+        force: d3.forceY(this.height * 0.87).strength((node, _i) => {
           return node.player.choiceIndex === -1 ? 0.07 : 0;
         })
       });
 
       choiceForces.push({
         label: "dconX",
-        force: d3.forceX(this.width * 0.05).strength((node, _i) => {
+        force: d3.forceX(this.width / 3).strength((node, _i) => {
           return node.player.connected ? 0 : 0.08;
         })
       });
       choiceForces.push({
         label: "dconY",
-        force: d3.forceY(this.height * 0.9).strength((node, _i) => {
+        force: d3.forceY(this.height * 0.95).strength((node, _i) => {
           return node.player.connected ? 0 : 0.08;
         })
       });
