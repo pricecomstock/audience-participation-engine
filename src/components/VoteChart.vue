@@ -1,43 +1,74 @@
 <template>
-  <svg :viewBox="`0 0 ${width} ${height}`" width="100%" @click="continueSimulation()">
+  <svg
+    :viewBox="`0 0 ${width} ${height}`"
+    width="100%"
+    @click="continueSimulation()"
+  >
     <text
       class="join-instructions"
       text-anchor="end"
-      :x="width*0.99"
-      :y="height*0.95"
-      >{{`enter ${roomCode} at testkitchen.fun`}}</text>
+      :x="width * 0.99"
+      :y="height * 0.95"
+    >
+      {{ `enter ${roomCode} at testkitchen.fun` }}
+    </text>
     <text
       v-if="gameState.locked"
       class="lock-notice"
       text-anchor="middle"
-      :x="width*0.5"
-      :y="height*0.83"
+      :x="width * 0.5"
+      :y="height * 0.83"
       fill="red"
-      >LOCKED</text>
+    >
+      LOCKED
+    </text>
     <g v-for="(choice, index) in gameState.choices" :key="`zone${index}`">
-      <rect 
-        :x="(width/gameState.choices.length) * index"
+      <rect
+        :x="(width / gameState.choices.length) * index"
         :y="0"
-        :width="width/gameState.choices.length"
-        :height="height*0.7"
-        :fill="colors(index)"></rect>
+        :width="width / gameState.choices.length"
+        :height="height * 0.7"
+        :fill="colors(index)"
+      ></rect>
       <text
         class="zone-label"
         text-anchor="middle"
-        :x="(width/gameState.choices.length) * index + (width/gameState.choices.length)/2"
-        :y="height*0.05"
-        >{{choice}}</text>
+        :x="
+          (width / gameState.choices.length) * index +
+            width / gameState.choices.length / 2
+        "
+        :y="height * 0.05"
+      >
+        {{ choice }}
+      </text>
       <text
         class="vote-count"
         text-anchor="middle"
-        :x="(width/gameState.choices.length) * index + (width/gameState.choices.length)/2"
-        :y="height*0.77"
-        >{{ gameState.players.filter(player=>{return player.choiceIndex === index && player.connected}).length }}</text>
+        :x="
+          (width / gameState.choices.length) * index +
+            width / gameState.choices.length / 2
+        "
+        :y="height * 0.77"
+      >
+        {{
+          gameState.players.filter(player => {
+            return player.choiceIndex === index && player.connected;
+          }).length
+        }}
+      </text>
     </g>
     <g v-for="(node, index) in nodes" :key="index">
       <!-- <circle :r="radius" :cx="node.x" :cy="node.y" :fill="node.color" fill-opacity="0" stroke="black" stroke-width="2px">
       </circle> -->
-      <text :class="{translucent: !node.player.connected}" :style="emojiClasses" text-anchor="middle" :x="node.x" :y="node.y">{{node.player.emoji}}</text>
+      <text
+        :class="{ translucent: !node.player.connected }"
+        :style="emojiClasses"
+        text-anchor="middle"
+        :x="node.x"
+        :y="node.y"
+      >
+        {{ node.player.emoji }}
+      </text>
     </g>
   </svg>
 </template>

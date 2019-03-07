@@ -1,11 +1,12 @@
 <template>
-<!-- @input="$emit('input', $event.target.value.charAt(0))"
+  <!-- @input="$emit('input', $event.target.value.charAt(0))"
       :value="value" -->
-    <input
-      v-model="emojiModel"
-      class="input is-medium"
-      type="text"
-      placeholder="😀">
+  <input
+    v-model="emojiModel"
+    class="input is-medium"
+    type="text"
+    placeholder="😀"
+  />
 </template>
 
 <script>

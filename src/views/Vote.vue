@@ -1,26 +1,39 @@
 <template>
   <div class="container">
     <div class="tags has-addons">
-      <span class="tag is-large has-text-small" @click="showEditPlayerInfo = !showEditPlayerInfo">
+      <span
+        class="tag is-large has-text-small"
+        @click="showEditPlayerInfo = !showEditPlayerInfo"
+      >
         <span class="icon is-large">
           <i class="fas fa-edit"></i>
         </span>
       </span>
-      <span class="tag is-dark is-large is-rounded">{{localPlayer.nickname}}</span>
-      <span class="tag is-light is-large is-rounded">{{localPlayer.emoji}}</span>
+      <span class="tag is-dark is-large is-rounded">{{
+        localPlayer.nickname
+      }}</span>
+      <span class="tag is-light is-large is-rounded">{{
+        localPlayer.emoji
+      }}</span>
     </div>
     <!-- <div>
       <span class="tag is-small is-warning">id: {{ playerId }}</span>
     </div> -->
-    
+
     <div class="buttons">
-      <div 
+      <div
         :disabled="locked || cooldown"
-        v-for="(choice, index) in choices" 
-        :key="index" 
-        class="button is-large" 
-        :class="{'is-fullwidth': choices.length < 5, 'is-primary': index === localPlayer.choiceIndex}" 
-        @click="vote(index)">{{ choice }}</div>
+        v-for="(choice, index) in choices"
+        :key="index"
+        class="button is-large"
+        :class="{
+          'is-fullwidth': choices.length < 5,
+          'is-primary': index === localPlayer.choiceIndex
+        }"
+        @click="vote(index)"
+      >
+        {{ choice }}
+      </div>
     </div>
 
     <section class="hero" v-if="locked">
@@ -32,13 +45,14 @@
         </div>
       </div>
     </section>
-    
-    <edit-player-info 
-      :class="{'is-active': showEditPlayerInfo}" 
-      @close="showEditPlayerInfo = false;" 
+
+    <edit-player-info
+      :class="{ 'is-active': showEditPlayerInfo }"
+      @close="showEditPlayerInfo = false"
       :is-open="showEditPlayerInfo"
-      :previousEmoji="this.localPlayer.emoji" 
-      :previousNickname="this.localPlayer.nickname"></edit-player-info>
+      :previousEmoji="this.localPlayer.emoji"
+      :previousNickname="this.localPlayer.nickname"
+    ></edit-player-info>
   </div>
 </template>
 
@@ -156,5 +170,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>
