@@ -4,6 +4,14 @@
     width="100%"
     @click="continueSimulation()"
   >
+    <rect
+      class="background-rect"
+      fill="#ffffff"
+      x="0"
+      y="0"
+      :width="width"
+      :height="height"
+    ></rect>
     <text
       class="join-instructions"
       text-anchor="end"
@@ -28,27 +36,33 @@
         :y="0"
         :width="width / gameState.choices.length"
         :height="height * 0.7"
-        :fill="colors(index)"
+        :fill="
+          leadingChoiceIndices.includes(index)
+            ? brightColors(index)
+            : colors(index)
+        "
       ></rect>
       <text
         class="zone-label"
         text-anchor="middle"
+        alignment-baseline="hanging"
         :x="
           (width / gameState.choices.length) * index +
             width / gameState.choices.length / 2
         "
-        :y="height * 0.05"
+        :y="height * 0.04"
       >
         {{ choice }}
       </text>
       <text
         class="vote-count"
         text-anchor="middle"
+        alignment-baseline="hanging"
         :x="
           (width / gameState.choices.length) * index +
             width / gameState.choices.length / 2
         "
-        :y="height * 0.77"
+        :y="height * 0.73"
       >
         {{
           gameState.players.filter(player => {
@@ -75,7 +89,22 @@
 
 <script>
 import * as d3 from "d3";
+var indexOfAll = (arr, val) =>
+  arr.reduce((acc, el, i) => (el === val ? [...acc, i] : acc), []);
+var arrayMax = arr => {
+  var len = arr.length,
+    max = -Infinity;
+  while (len--) {
+    if (arr[len] > max) {
+      max = arr[len];
+    }
+  }
+  return max;
+};
 
+var createColorFunction = colorArray => {
+  return index => colorArray[index % colorArray.length];
+};
 export default {
   name: "vote-chart",
   props: {
@@ -100,16 +129,6 @@ export default {
       forces: [{ label: "posX0", force: d3.forceX(0) }],
       maxZonesHad: 0,
       // colors: d3.scaleOrdinal(d3.schemeSet3),
-      colors: d3.scaleOrdinal([
-        "#A7CAEE",
-        "#FF9BB4",
-        "#CEE498",
-        "#FBCAB3",
-        "#C9C2FF",
-        "#A7FBBA",
-        "#B8FFF8",
-        "#ECBCC4"
-      ]),
       edgeBuffer: 10
     };
   },
@@ -125,6 +144,19 @@ export default {
         "font-size": `${this.emojiFontSizeForRadius(this.radius)}em`,
         transform: `translateY(${this.emojiOffsetForRadius(this.radius)}em)`
       };
+    },
+    leadingChoiceIndices() {
+      const counts = this.gameState.choices.map(() => 0);
+      this.gameState.players.forEach((player, _index) => {
+        counts[player.choiceIndex] += 1;
+      });
+
+      const highestVoteCount = arrayMax(counts);
+      if (highestVoteCount === 0) {
+        return [];
+      }
+      console.log(indexOfAll(counts, highestVoteCount));
+      return indexOfAll(counts, highestVoteCount);
     }
   },
   methods: {
@@ -321,7 +353,21 @@ export default {
     emojiOffsetForRadius: d3
       .scaleLinear()
       .domain([20, 30])
-      .range([0.4, 0.31])
+      .range([0.4, 0.31]),
+    colors: createColorFunction([
+      "#BBD4ED",
+      "#FFBFCF",
+      "#FFD3C4",
+      "#D9E2C0",
+      "#FFD3FC"
+    ]),
+    brightColors: createColorFunction([
+      "#55A1ED",
+      "#FF5E86",
+      "#FF7C51",
+      "#BEE25A",
+      "#FF6BF5"
+    ])
   },
   mounted() {
     this.createNodes();
@@ -360,11 +406,11 @@ export default {
 
 .zone-label {
   text-transform: uppercase;
-  font-size: 3em;
+  font-size: 4em;
 }
 
 .vote-count {
-  font-size: 4em;
+  font-size: 5em;
 }
 
 .translucent {
