@@ -6,11 +6,13 @@
     class="input is-large"
     type="text"
     placeholder="😀"
+    @focus="emojiModel = ''"
   />
 </template>
 
 <script>
-import "string.prototype.at";
+var _;
+import "lodash";
 export default {
   props: {
     value: {
@@ -23,8 +25,7 @@ export default {
         return this.value;
       },
       set(v) {
-        // console.log(v.at(0))
-        this.$emit("input", v.at(0));
+        this.$emit("input", _.toArray(v)[0]);
       }
     }
   },
