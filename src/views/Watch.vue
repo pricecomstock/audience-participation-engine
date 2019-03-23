@@ -82,6 +82,50 @@
           </div>
         </div>
         <div class="box">
+          <label class="label">Quick Choices</label>
+          <div class="buttons">
+            <button class="button" @click="submitNewChoices(['Yes', 'No'])">
+              Yes/No
+            </button>
+            <button class="button" @click="submitNewChoices(['True', 'False'])">
+              True/False
+            </button>
+          </div>
+          <label class="label">Multiple Choice</label>
+          <div class="buttons">
+            <button class="button" @click="submitNewChoices(['A', 'B'])">
+              2 option
+            </button>
+            <button class="button" @click="submitNewChoices(['A', 'B', 'C'])">
+              3 option
+            </button>
+            <button
+              class="button"
+              @click="submitNewChoices(['A', 'B', 'C', 'D'])"
+            >
+              4 option
+            </button>
+            <button
+              class="button"
+              @click="submitNewChoices(['A', 'B', 'C', 'D', 'E'])"
+            >
+              5 option
+            </button>
+            <button
+              class="button"
+              @click="submitNewChoices(['A', 'B', 'C', 'D', 'E', 'F'])"
+            >
+              6 option
+            </button>
+            <button
+              class="button"
+              @click="submitNewChoices(['A', 'B', 'C', 'D', 'E', 'F', 'G'])"
+            >
+              7 option
+            </button>
+          </div>
+        </div>
+        <div class="box">
           <table class="table is-fullwidth is-striped">
             <thead>
               <th>emoji</th>
@@ -159,9 +203,9 @@ export default {
         //TODO Add admin key
       });
     },
-    submitNewChoices() {
+    submitNewChoices(newChoices) {
       //TODO Add admin key
-      this.$socket.emit("newchoices", this.newChoicesList);
+      this.$socket.emit("newchoices", newChoices);
     },
     resetVotes() {
       this.$socket.emit("resetvotes", "");
