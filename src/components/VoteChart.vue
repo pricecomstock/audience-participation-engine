@@ -355,11 +355,11 @@ export default {
       .domain([20, 30])
       .range([0.4, 0.31]),
     colors: createColorFunction([
-      "#BBD4ED",
-      "#FFBFCF",
-      "#FFD3C4",
-      "#D9E2C0",
-      "#FFD3FC"
+      "#CBDCED",
+      "#FFD6E0",
+      "#FFE2D8",
+      "#DFE2D7",
+      "#FFDDFC"
     ]),
     brightColors: createColorFunction([
       "#55A1ED",
