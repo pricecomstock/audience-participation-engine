@@ -3,7 +3,7 @@
       :value="value" -->
   <input
     v-model="emojiModel"
-    class="input is-medium"
+    class="input is-large"
     type="text"
     placeholder="😀"
   />

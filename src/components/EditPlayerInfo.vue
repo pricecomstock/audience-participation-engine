@@ -4,7 +4,7 @@
     <div class="modal-content">
       <div class="box has-text-left">
         <div class="field">
-          <label class="label is-large">Emoji</label>
+          <label class="label is-large">Pick an Emoji</label>
           <div class="control emoji-input">
             <emoji-input
               @keydown.enter="submit()"
@@ -12,7 +12,8 @@
             ></emoji-input>
           </div>
         </div>
-        <div class="field">
+        <!-- FIXME There is a bug with pressing enter on nickname on mobile, though emoji works-->
+        <!-- <div class="field">
           <label class="label is-large">Display Name</label>
           <div class="control">
             <input
@@ -23,8 +24,7 @@
               v-model="nickname"
             />
           </div>
-          <!-- FIXME There is a bug with pressing enter on nickname on mobile, though emoji works-->
-        </div>
+        </div> -->
         <div class="field is-grouped is-grouped-right">
           <p class="control">
             <a class="button is-white is-large" @click="close()">

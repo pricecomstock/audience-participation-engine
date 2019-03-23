@@ -63,6 +63,7 @@
             width / gameState.choices.length / 2
         "
         :y="height * 0.73"
+        :fill="leadingChoiceIndices.includes(index) ? '#000' : '#aaa'"
       >
         {{
           gameState.players.filter(player => {

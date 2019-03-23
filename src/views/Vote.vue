@@ -2,22 +2,20 @@
   <div class="container">
     <div class="level is-mobile">
       <div class="level-left">
-        <div class="tags has-addons">
-          <span
-            class="tag is-large has-text-small"
-            @click="showEditPlayerInfo = !showEditPlayerInfo"
-          >
-            <span class="icon is-large">
-              <i class="fas fa-edit"></i>
-            </span>
-          </span>
+        <!-- <div class="tags has-addons">
           <span class="tag is-dark is-large is-rounded">{{
             localPlayer.nickname
           }}</span>
-          <span class="tag is-light is-large is-rounded">{{
-            localPlayer.emoji
-          }}</span>
-        </div>
+        </div> -->
+        <p class="is-size-2" @click="showEditPlayerInfo = !showEditPlayerInfo">
+          {{ localPlayer.emoji }}
+        </p>
+        <button
+          class="button is-inverted is-primary"
+          @click="showEditPlayerInfo = !showEditPlayerInfo"
+        >
+          Change Emoji
+        </button>
       </div>
       <div class="level-right">
         <button
@@ -25,7 +23,7 @@
           class="button is-medium"
           @click="connectToThisRoom()"
         >
-          <span class="icon"><i class="fas fa-redo-alt"></i></span>
+          <span class="icon"><i class="fas fa-sync-alt"></i></span>
         </button>
         <span class="tag is-large is-danger" v-if="showFlag">FLAG</span>
       </div>
