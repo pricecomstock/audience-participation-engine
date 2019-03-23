@@ -208,11 +208,14 @@ export default {
       });
     },
     gameState() {
-      return {
-        choices: this.choices,
-        players: this.players,
-        locked: this.locked
-      };
+      if (this.debug) {
+        return this.dummyGameState;
+      } else
+        return {
+          choices: this.choices,
+          players: this.players,
+          locked: this.locked
+        };
     },
     dummyGameState() {
       let dummyState = {
