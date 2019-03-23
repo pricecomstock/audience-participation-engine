@@ -313,7 +313,7 @@ export default {
     radiusForPlayers: d3
       .scaleLinear()
       .domain([0, 50])
-      .range([30, 20]),
+      .range([50, 35]),
     emojiFontSizeForRadius: d3
       .scaleLinear()
       .domain([20, 30])
@@ -360,11 +360,11 @@ export default {
 
 .zone-label {
   text-transform: uppercase;
-  font-size: 1.5em;
+  font-size: 3em;
 }
 
 .vote-count {
-  font-size: 2em;
+  font-size: 4em;
 }
 
 .translucent {
@@ -372,10 +372,10 @@ export default {
 }
 
 .join-instructions {
-  font-size: 1.2em;
+  font-size: 3em;
 }
 
 .lock-notice {
-  font-size: 4em;
+  font-size: 6em;
 }
 </style>
