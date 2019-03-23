@@ -11,7 +11,6 @@
 </template>
 
 <script>
-var _;
 import "lodash";
 export default {
   props: {
@@ -25,6 +24,7 @@ export default {
         return this.value;
       },
       set(v) {
+        // eslint-disable-next-line
         this.$emit("input", _.toArray(v)[0]);
       }
     }
