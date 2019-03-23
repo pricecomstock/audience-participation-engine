@@ -39,7 +39,9 @@ class RoomManager {
 
       let sendRoomUpdates = roomCode => {
         let roomToUpdate = this.getRoomWithCode(roomCode);
-        io.in(roomCode).emit("state", roomToUpdate.summary());
+        if (roomToUpdate) {
+          io.in(roomCode).emit("state", roomToUpdate.summary());
+        }
       };
 
       // Startup tasks
@@ -102,7 +104,7 @@ class RoomManager {
           sendRoomUpdates(socket.roomCode);
         }
       });
-      
+
       socket.on("playerreconnect", reason => {
         if (socket.player) {
           console.log("reconnect", reason);
@@ -134,7 +136,7 @@ class RoomManager {
         }
       });
 
-      socket.on("resetvotes", adminKey => {
+      socket.on("resetvotes", _adminKey => {
         // TODO Also check admin key
         if (this.checkRoomExists(socket.roomCode)) {
           let room = this.getRoomWithCode(socket.roomCode);
@@ -143,12 +145,12 @@ class RoomManager {
           sendRoomUpdates(socket.roomCode);
         }
       });
-      
+
       socket.on("lockvotes", locked => {
         // TODO Also check admin key
         if (this.checkRoomExists(socket.roomCode)) {
           let room = this.getRoomWithCode(socket.roomCode);
-          console.log("locking room")
+          console.log("locking room");
           room.setLock(locked);
 
           sendRoomUpdates(socket.roomCode);
