@@ -40,6 +40,7 @@ class RoomManager {
       let sendRoomUpdates = roomCode => {
         let roomToUpdate = this.getRoomWithCode(roomCode);
         if (roomToUpdate) {
+          console.log("emitting room state to" + roomCode);
           io.in(roomCode).emit("state", roomToUpdate.summary());
         }
       };
@@ -53,6 +54,7 @@ class RoomManager {
         const roomCode = data.roomCode;
         const requestedId = data.requestedId;
 
+        // TODO move to a different file
         class Player {
           constructor() {
             this.connected = true;
@@ -71,7 +73,7 @@ class RoomManager {
 
         if (this.checkRoomExists(roomCode)) {
           let joinedRoom = this.getRoomWithCode(roomCode);
-          console.log("Joined room code", roomCode);
+          console.log("Joined room", joinedRoom);
           socket.join(roomCode);
           socket.roomCode = roomCode;
 
@@ -85,8 +87,10 @@ class RoomManager {
             } else {
               console.log("Player does not exist, creating a new one.");
               socket.player = new Player();
+              joinedRoom.addPlayer(socket.player);
             }
           } else {
+            console.log("player not claiming to exist, adding as new player");
             socket.player = new Player();
             joinedRoom.addPlayer(socket.player);
           }
@@ -116,6 +120,11 @@ class RoomManager {
 
       socket.on("roomadminjoin", data => {
         let roomCode = data.roomCode;
+        if (socket.rooms) {
+          // socket already was in a room
+          socket.leaveAll();
+          socket.roomCode = "";
+        }
         // TODO Also check admin key
         if (this.checkRoomExists(roomCode)) {
           socket.join(roomCode);
