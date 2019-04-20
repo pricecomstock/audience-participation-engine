@@ -1,15 +1,17 @@
 <template>
-<!-- @input="$emit('input', $event.target.value.charAt(0))"
+  <!-- @input="$emit('input', $event.target.value.charAt(0))"
       :value="value" -->
-    <input
-      v-model="emojiModel"
-      class="input is-medium"
-      type="text"
-      placeholder="😀">
+  <input
+    v-model="emojiModel"
+    class="input is-large"
+    type="text"
+    placeholder="😀"
+    @focus="emojiModel = ''"
+  />
 </template>
 
 <script>
-import "string.prototype.at";
+import "lodash";
 export default {
   props: {
     value: {
@@ -22,8 +24,8 @@ export default {
         return this.value;
       },
       set(v) {
-        // console.log(v.at(0))
-        this.$emit("input", v.at(0));
+        // eslint-disable-next-line
+        this.$emit("input", _.toArray(v)[0]);
       }
     }
   },

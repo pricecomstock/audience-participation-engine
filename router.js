@@ -7,7 +7,6 @@ function createRouter(io) {
   router.use(express.json());
 
   // Set up room management
-  var rooms = [];
   var roomManager = new RoomManager(io);
 
   // Base route

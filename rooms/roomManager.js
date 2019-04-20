@@ -39,7 +39,10 @@ class RoomManager {
 
       let sendRoomUpdates = roomCode => {
         let roomToUpdate = this.getRoomWithCode(roomCode);
-        io.in(roomCode).emit("state", roomToUpdate.summary());
+        if (roomToUpdate) {
+          console.log("emitting room state to" + roomCode);
+          io.in(roomCode).emit("state", roomToUpdate.summary());
+        }
       };
 
       // Startup tasks
@@ -51,6 +54,7 @@ class RoomManager {
         const roomCode = data.roomCode;
         const requestedId = data.requestedId;
 
+        // TODO move to a different file
         class Player {
           constructor() {
             this.connected = true;
@@ -69,7 +73,7 @@ class RoomManager {
 
         if (this.checkRoomExists(roomCode)) {
           let joinedRoom = this.getRoomWithCode(roomCode);
-          console.log("Joined room code", roomCode);
+          console.log("Joined room", joinedRoom);
           socket.join(roomCode);
           socket.roomCode = roomCode;
 
@@ -83,8 +87,10 @@ class RoomManager {
             } else {
               console.log("Player does not exist, creating a new one.");
               socket.player = new Player();
+              joinedRoom.addPlayer(socket.player);
             }
           } else {
+            console.log("player not claiming to exist, adding as new player");
             socket.player = new Player();
             joinedRoom.addPlayer(socket.player);
           }
@@ -102,7 +108,7 @@ class RoomManager {
           sendRoomUpdates(socket.roomCode);
         }
       });
-      
+
       socket.on("playerreconnect", reason => {
         if (socket.player) {
           console.log("reconnect", reason);
@@ -114,6 +120,11 @@ class RoomManager {
 
       socket.on("roomadminjoin", data => {
         let roomCode = data.roomCode;
+        if (socket.rooms) {
+          // socket already was in a room
+          socket.leaveAll();
+          socket.roomCode = "";
+        }
         // TODO Also check admin key
         if (this.checkRoomExists(roomCode)) {
           socket.join(roomCode);
@@ -134,7 +145,7 @@ class RoomManager {
         }
       });
 
-      socket.on("resetvotes", adminKey => {
+      socket.on("resetvotes", _adminKey => {
         // TODO Also check admin key
         if (this.checkRoomExists(socket.roomCode)) {
           let room = this.getRoomWithCode(socket.roomCode);
@@ -143,12 +154,12 @@ class RoomManager {
           sendRoomUpdates(socket.roomCode);
         }
       });
-      
+
       socket.on("lockvotes", locked => {
         // TODO Also check admin key
         if (this.checkRoomExists(socket.roomCode)) {
           let room = this.getRoomWithCode(socket.roomCode);
-          console.log("locking room")
+          console.log("locking room");
           room.setLock(locked);
 
           sendRoomUpdates(socket.roomCode);

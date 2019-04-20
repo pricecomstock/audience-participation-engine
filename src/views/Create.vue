@@ -4,13 +4,21 @@
       <div class="field">
         <label class="label is-large">ROOM NAME</label>
         <div class="control">
-          <input class="input is-large" v-model="roomName">          
+          <input
+            class="input is-large"
+            v-model="roomName"
+            @keyup.enter="createRoom()"
+          />
         </div>
       </div>
 
       <div class="field is-grouped is-grouped-centered">
         <p class="control">
-          <a class="button is-large is-primary" @click="createRoom()" @keydown.enter="createRoom()">
+          <a
+            class="button is-large is-primary"
+            @click="createRoom()"
+            @keydown.enter="createRoom()"
+          >
             CREATE
           </a>
         </p>
@@ -23,7 +31,6 @@
     </div>
   </div>
 </template>
-
 
 <script>
 // @ is an alias to /src

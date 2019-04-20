@@ -1,26 +1,51 @@
 <template>
   <div class="container">
-    <div class="tags has-addons">
-      <span class="tag is-large has-text-small" @click="showEditPlayerInfo = !showEditPlayerInfo">
-        <span class="icon is-large">
-          <i class="fas fa-edit"></i>
-        </span>
-      </span>
-      <span class="tag is-dark is-large is-rounded">{{localPlayer.nickname}}</span>
-      <span class="tag is-light is-large is-rounded">{{localPlayer.emoji}}</span>
+    <div class="level is-mobile">
+      <div class="level-left">
+        <!-- <div class="tags has-addons">
+          <span class="tag is-dark is-large is-rounded">{{
+            localPlayer.nickname
+          }}</span>
+        </div> -->
+        <p class="is-size-2" @click="showEditPlayerInfo = !showEditPlayerInfo">
+          {{ localPlayer.emoji }}
+        </p>
+        <button
+          class="button is-inverted is-primary"
+          @click="showEditPlayerInfo = !showEditPlayerInfo"
+        >
+          Change Emoji
+        </button>
+      </div>
+      <div class="level-right">
+        <button
+          v-if="isDisconnected"
+          class="button is-medium"
+          @click="connectToThisRoom()"
+        >
+          <span class="icon"><i class="fas fa-sync-alt"></i></span>
+        </button>
+        <span class="tag is-large is-danger" v-if="showFlag">FLAG</span>
+      </div>
     </div>
     <!-- <div>
       <span class="tag is-small is-warning">id: {{ playerId }}</span>
     </div> -->
-    
+
     <div class="buttons">
-      <div 
-        :disabled="locked || cooldown"
-        v-for="(choice, index) in choices" 
-        :key="index" 
-        class="button is-large" 
-        :class="{'is-fullwidth': choices.length < 5, 'is-primary': index === localPlayer.choiceIndex}" 
-        @click="vote(index)">{{ choice }}</div>
+      <div
+        :disabled="locked || cooldown || index === localPlayer.choiceIndex"
+        v-for="(choice, index) in choices"
+        :key="index"
+        class="button is-large"
+        :class="{
+          'is-fullwidth': choices.length <= 3,
+          'is-primary': index === localPlayer.choiceIndex
+        }"
+        @click="vote(index)"
+      >
+        {{ choice }}
+      </div>
     </div>
 
     <section class="hero" v-if="locked">
@@ -32,18 +57,35 @@
         </div>
       </div>
     </section>
-    
-    <edit-player-info 
-      :class="{'is-active': showEditPlayerInfo}" 
-      @close="showEditPlayerInfo = false;" 
+
+    <edit-player-info
+      :class="{ 'is-active': showEditPlayerInfo }"
+      @close="showEditPlayerInfo = false"
       :is-open="showEditPlayerInfo"
-      :previousEmoji="this.localPlayer.emoji" 
-      :previousNickname="this.localPlayer.nickname"></edit-player-info>
+      :previousEmoji="this.localPlayer.emoji"
+      :previousNickname="this.localPlayer.nickname"
+    ></edit-player-info>
   </div>
 </template>
 
 <script>
 import EditPlayerInfo from "@/components/EditPlayerInfo.vue";
+
+function registerMissedHeartbeatFunction(fn) {
+  var lastIntervalTime = new Date().getTime();
+  const heartbeatIntervalMs = 1000;
+  function heartbeat() {
+    let now = new Date().getTime();
+    let diff = now - lastIntervalTime;
+    lastIntervalTime = now;
+    // console.log(diff);
+    if (diff > heartbeatIntervalMs + 150) {
+      console.log("Heartbeat missed, calling registered function");
+      fn();
+    }
+  }
+  setInterval(heartbeat, heartbeatIntervalMs);
+}
 
 export default {
   name: "vote",
@@ -65,7 +107,11 @@ export default {
       },
       playerId: "",
       showEditPlayerInfo: false,
-      cooldown: false
+      cooldown: false,
+      heartbeatIntervalMs: 1000,
+      heartbeatIntervalId: 0,
+      lastIntervalTime: 0,
+      showFlag: false
     };
   },
   sockets: {
@@ -100,10 +146,10 @@ export default {
     },
     playerIdAssigned: function(id) {
       this.playerId = id;
-      sessionStorage.setItem(this.id, this.playerId);
+      localStorage.setItem(this.id, this.playerId);
       console.log("Assigned ID", id);
     },
-    reconnect: function(attempts) {
+    reconnect: function(_attempts) {
       this.setPlayerActive();
     }
     // startVote: function(newChoices) {
@@ -113,19 +159,17 @@ export default {
   },
   methods: {
     vote(choiceIndex) {
-      // let voteInfo = {
-      //   choiceIndex: choiceIndex,
-      //   playerName: this.playerName,
-      //   room: this.id
-      // };
-      // console.table(voteInfo);
-      if (!this.locked && !this.cooldown) {
+      if (
+        !this.locked &&
+        !this.cooldown &&
+        choiceIndex !== this.localPlayer.choiceIndex
+      ) {
         this.$socket.emit("vote", choiceIndex);
         this.startCooldown();
       }
     },
     joinRoom(roomCode) {
-      let existingPlayerIdForRoom = sessionStorage.getItem(roomCode);
+      let existingPlayerIdForRoom = localStorage.getItem(roomCode);
       console.log("existing id", existingPlayerIdForRoom);
       this.$socket.emit("room", {
         roomCode: roomCode,
@@ -145,10 +189,23 @@ export default {
     },
     endCooldown() {
       this.cooldown = false;
+    },
+    connectToThisRoom() {
+      this.joinRoom(this.id);
+    },
+    disconnect() {
+      this.$socket.close();
+    }
+  },
+  computed: {
+    isDisconnected() {
+      return this.$socket.disconnected;
     }
   },
   mounted() {
-    this.joinRoom(this.id);
+    this.connectToThisRoom();
+    registerMissedHeartbeatFunction(this.connectToThisRoom);
+    // window.addEventListener("blur", this.handlePhoneAsleep.bind(context, true));
   },
   components: {
     editPlayerInfo: EditPlayerInfo
@@ -156,5 +213,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

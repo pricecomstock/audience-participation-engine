@@ -14,7 +14,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-api = createRouter(io);
+const api = createRouter(io);
 
 app.use("/api", api);
 

@@ -7,11 +7,17 @@
         </span>
         <span>{{ appName }}</span>
       </router-link>
-      <div class="navbar-burger" :class="{'is-active':showNav}" @click="showNav = !showNav" data-target="navMenu">
-        <span></span> <!--wow these are the 3 bars of the hamburger icon-->
+      <!--wow these are the 3 bars of the hamburger icon-->
+      <!-- <div
+        class="navbar-burger"
+        :class="{ 'is-active': showNav }"
+        @click="showNav = !showNav"
+        data-target="navMenu"
+      >
         <span></span>
         <span></span>
-      </div>
+        <span></span>
+      </div> -->
     </div>
     <!-- <div class="navbar-menu" :class="{'is-active':showNav}" id="navMenu">
       <div class="navbar-start">
@@ -26,7 +32,7 @@
           </div>
         </div>
       </div> -->
-      <!-- <div class="navbar-end">
+    <!-- <div class="navbar-end">
         <div class="navbar-item" v-if="!showNav">
           <div class="field">
             <p class="control">

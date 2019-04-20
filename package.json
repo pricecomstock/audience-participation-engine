@@ -9,28 +9,28 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "bulma": "^0.7.1",
-    "d3": "^5.7.0",
+    "bulma": "^0.7.4",
+    "d3": "^5.9.1",
     "d3moji": "^0.1.0",
     "express": "^4.16.4",
+    "lodash": "^4.17.11",
     "serve-static": "^1.13.2",
-    "socketio": "^1.0.0",
-    "string.prototype.at": "^0.2.0",
-    "vue": "^2.5.17",
-    "vue-router": "^3.0.1",
-    "vue-socket.io": "^2.1.1-b",
-    "vuex": "^3.0.1"
+    "socket.io": "^2.2.0",
+    "vue": "^2.6.4",
+    "vue-router": "^3.0.2",
+    "vue-socket.io": "^3.0.5",
+    "vuex": "^3.1.0"
   },
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^5.3.1",
-    "@vue/cli-plugin-babel": "^3.0.1",
-    "@vue/cli-plugin-eslint": "^3.0.1",
-    "@vue/cli-service": "^3.0.1",
-    "@vue/eslint-config-prettier": "^3.0.1",
-    "lint-staged": "^7.2.2",
-    "node-sass": "^4.9.0",
+    "@fortawesome/fontawesome-free": "^5.7.1",
+    "@vue/cli-plugin-babel": "^3.4.0",
+    "@vue/cli-plugin-eslint": "^3.4.0",
+    "@vue/cli-service": "^3.4.0",
+    "@vue/eslint-config-prettier": "^3.0.5",
+    "lint-staged": "^7.3.0",
+    "node-sass": "^4.11.0",
     "sass-loader": "^7.0.1",
-    "vue-template-compiler": "^2.5.17"
+    "vue-template-compiler": "^2.6.4"
   },
   "eslintConfig": {
     "root": true,
@@ -41,7 +41,15 @@
       "plugin:vue/essential",
       "@vue/prettier"
     ],
-    "rules": {},
+    "rules": {
+      "no-console": 0,
+      "no-unused-vars": [
+        "error",
+        {
+          "argsIgnorePattern": "^_"
+        }
+      ]
+    },
     "parserOptions": {
       "parser": "babel-eslint"
     }
