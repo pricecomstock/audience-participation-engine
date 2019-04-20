@@ -149,7 +149,9 @@ export default {
     leadingChoiceIndices() {
       const counts = this.gameState.choices.map(() => 0);
       this.gameState.players.forEach((player, _index) => {
-        counts[player.choiceIndex] += 1;
+        if (player.connected) {
+          counts[player.choiceIndex] += 1;
+        }
       });
 
       const highestVoteCount = arrayMax(counts);
